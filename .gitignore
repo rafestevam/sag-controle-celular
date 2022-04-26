@@ -4,6 +4,7 @@ sag-controle-celular
 bootstrap-vue-argon-dashboard
 flask_session
 apicel
+__pycache__
 
 # local env files
 .env.local
