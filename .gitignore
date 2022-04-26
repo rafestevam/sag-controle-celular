@@ -1,0 +1,27 @@
+.vscode
+node_modules
+sag-controle-celular
+bootstrap-vue-argon-dashboard
+flask_session
+apicel
+
+# local env files
+.env.local
+.env.*.local
+
+# Log files
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# Editor directories and files
+.idea
+.vscode
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+*.drawio
+*.xlsx

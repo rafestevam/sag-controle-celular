@@ -1,0 +1,2 @@
+client-id: 42f4eb4b-f48d-4bdf-af99-c3994605a805
+client-secret: 3D77Q~FD1v~Ryk-IHBOwINMychrgdtZNkblA~

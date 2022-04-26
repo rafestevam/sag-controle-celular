@@ -1,0 +1,1 @@
+export const LIST_ALL_APARELHOS = 'LIST_ALL_APARELHOS';
