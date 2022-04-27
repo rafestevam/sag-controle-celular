@@ -86,7 +86,8 @@ export default defineComponent({
       iCodigo: Yup.number()
         .required('O campo Código é obrigatório')
         .typeError('O campo Código deve conter somente números')
-        .max(6, 'O campo Código deve conter somente 6 números'), 
+        .max(6, 'O campo Código deve conter somente 6 números')
+        .min(6, 'O campo Código deve conter 6 números'),
       iNome: Yup.string()
         .required('O campo Nome é obrigatório'),
     });

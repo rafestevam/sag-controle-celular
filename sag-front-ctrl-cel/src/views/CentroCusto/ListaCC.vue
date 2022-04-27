@@ -12,7 +12,7 @@
     </router-link>
     </div>
     <div class="container is-widescreen">
-      <table class="table is-fullwidth">
+      <table class="table is-fullwidth" v-if="centros_custo">
         <thead>
           <tr>
             <td>Código</td>
@@ -39,6 +39,7 @@
           </tr>
         </tbody>
       </table>
+      <BoxNotification message="Não há Centros de Custo cadastrados na base de dados" v-else />
     </div>
   </section>
 </template>
@@ -49,9 +50,13 @@ import { useStore } from '@/store';
 import useNotificator from '@/hooks/Notificator';
 import { DELETE_CC, GET_ALL_CC } from '@/store/modules/centrocusto/constants/action-type';
 import { NotificationType } from '@/interfaces/INotification';
+import BoxNotification from '@/components/BoxNotification/BoxNotification.vue';
 
 export default defineComponent({
     name: 'ListaCCViewComponent',
+    components: {
+      BoxNotification,
+    },
     setup () {
       const store = useStore();
       const { notify } = useNotificator();
