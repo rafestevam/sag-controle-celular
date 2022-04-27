@@ -2,7 +2,7 @@ import httpClient from "@/http";
 import IAparelho from "@/interfaces/IAparelho";
 import { AppState } from "@/store";
 import { Module } from "vuex";
-import { GET_ALL_APARELHOS } from "./constants/action-type";
+import { GET_ALL_APARELHOS, POST_APARELHO } from "./constants/action-type";
 import { LIST_ALL_APARELHOS } from "./constants/mutation-type";
 
 export interface AparelhoState {
@@ -19,6 +19,13 @@ export const aparelho: Module<AparelhoState, AppState> = {
         [GET_ALL_APARELHOS]({ commit }){
             httpClient.get("aparelhos")
                 .then(resp => commit(LIST_ALL_APARELHOS, resp.data));
+        },
+        [POST_APARELHO](ctx, aparelho: IAparelho) {
+            return httpClient.post("aparelhos", aparelho, {
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+            });
         }
     }
 }

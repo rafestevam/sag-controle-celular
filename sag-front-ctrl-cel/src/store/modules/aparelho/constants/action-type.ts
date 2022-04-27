@@ -1,1 +1,2 @@
 export const GET_ALL_APARELHOS = 'GET_ALL_APARELHOS';
+export const POST_APARELHO = 'POST_APARELHO';
