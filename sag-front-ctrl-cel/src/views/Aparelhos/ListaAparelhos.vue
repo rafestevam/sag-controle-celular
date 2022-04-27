@@ -4,7 +4,7 @@
   </div>
   <section class="main-form">
     <div class="container is-widescreen">
-      <table class="table is-fullwidth">
+      <table class="table is-fullwidth" v-if="aparelhos">
         <thead>
           <tr>
             <td>Num. Série</td>
@@ -52,6 +52,7 @@
           </tr> -->
         </tbody>
       </table>
+      <BoxNotification message="Não há aparelhos cadastrados na base de dados" v-else />
     </div>
   </section>
 </template>
@@ -60,8 +61,13 @@
 import { useStore } from "@/store";
 import { GET_ALL_APARELHOS } from "@/store/modules/aparelho/constants/action-type";
 import { computed, defineComponent } from "vue";
+import BoxNotification from "@/components/BoxNotification/BoxNotification.vue";
+
 export default defineComponent({
   name: "ListaAparelhosViewComponent",
+  components: {
+    BoxNotification,
+  },
   setup() {
     const store = useStore();
     store.dispatch(GET_ALL_APARELHOS);
