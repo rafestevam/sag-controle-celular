@@ -1,6 +1,10 @@
 import IFuncionario from "./IFuncionario";
 import ILinha from "./ILinha";
 
+export enum AparelhoStatus {
+    EM_USO = 'Em Uso',
+    DISPONIVEL = 'Disponível',
+}
 export default interface IAparelho {
     id: string,
     imei: string,
