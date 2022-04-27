@@ -97,6 +97,11 @@ class AparelhoListResource(Resource):
         required=True,
         help="O aparelho deve ser atribuído a um funcionário"
     )
+    data_parser.add_argument("linha_id",
+        type=str,
+        required=True,
+        help="Uma linha deve ser atribuída a um aparelho"
+    )
 
     def post(self):
         try:
