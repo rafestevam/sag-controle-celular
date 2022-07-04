@@ -4,7 +4,7 @@
   </div>
   <section class="main-form">
     <Form
-      @submit.prevent="saveAparelho"
+      @submit="saveAparelho"
       :validation-schema="aparelhoSchema"
       v-slot="{ errors }"
     >
@@ -15,6 +15,11 @@
             <label class="label">IMEI/IMEI2</label>
           </div>
           <div class="field-body">
+            <!-- <div class="field" v-if="id">
+              <p class="control is-expanded">
+                <label class="input">{{ aparelho.imei }}</label>
+              </p>
+            </div> -->
             <div class="field">
               <p class="control is-expanded">
                 <!-- <input type="text" class="input" placeholder="IMEI" /> -->
@@ -29,6 +34,11 @@
               </p>
               <p class="help is-danger">{{ errors.iIMEI }}</p>
             </div>
+            <!-- <div class="field" v-if="id">
+              <p class="control is-expanded">
+                <label class="input">{{ aparelho.imei_2 }}</label>
+              </p>
+            </div> -->
             <div class="field">
               <p class="control is-expanded">
                 <!-- <input type="text" class="input" placeholder="IMEI2" /> -->
@@ -52,6 +62,11 @@
             <label class="label">Fabricante</label>
           </div>
           <div class="field-body">
+            <!-- <div class="field" v-if="id">
+              <p class="control is-expanded">
+                <label class="input">{{ aparelho.fabricante }}</label>
+              </p>
+            </div> -->
             <div class="field">
               <p class="control is-expanded">
                 <!-- <input type="text" class="input" placeholder="" /> -->
@@ -74,31 +89,43 @@
             <label class="label">Marca/Modelo</label>
           </div>
           <div class="field-body">
+            <!-- <div class="field" v-if="id">
+              <p class="control is-expanded">
+                <label class="input">{{ aparelho.marca }}</label>
+              </p>
+            </div> -->
             <div class="field">
               <p class="control is-expanded">
                 <!-- <input type="text" class="input" placeholder="Marca" /> -->
-                <Field 
-                 name="iMarca"
-                 as="input"
-                 class="input"
-                 v-model="aparelho.marca"
-                 :class="{ 'is-danger': errors.iMarca }"
-                 placeholder="Marca"
+                <Field
+                  name="iMarca"
+                  as="input"
+                  class="input"
+                  v-model="aparelho.marca"
+                  :class="{ 'is-danger': errors.iMarca }"
+                  placeholder="Marca"
                 />
               </p>
+              <p class="help is-danger">{{ errors.iMarca }}</p>
             </div>
+            <!-- <div class="field" v-if="id">
+              <p class="control is-expanded">
+                <label class="input">{{ aparelho.modelo }}</label>
+              </p>
+            </div> -->
             <div class="field">
               <p class="control is-expanded">
                 <!-- <input type="text" class="input" placeholder="Modelo" /> -->
                 <Field
-                 name="iModelo"
-                 as="input"
-                 class="input"
-                 v-model="aparelho.modelo"
-                 :class="{ 'is-danger': errors.iModelo }"
-                 placeholder="Modelo"
+                  name="iModelo"
+                  as="input"
+                  class="input"
+                  v-model="aparelho.modelo"
+                  :class="{ 'is-danger': errors.iModelo }"
+                  placeholder="Modelo"
                 />
               </p>
+              <p class="help is-danger">{{ errors.iModelo }}</p>
             </div>
           </div>
         </div>
@@ -113,30 +140,37 @@
               <p class="control is-expanded">
                 <!-- <input type="text" class="input" placeholder="" /> -->
                 <Field
-                 name="iNumSerie"
-                 as="input"
-                 class="input"
-                 v-model="aparelho.numero_serie"
-                 :class="{ 'is-danger': errors.iNumSerie }"
+                  name="iNumSerie"
+                  as="input"
+                  class="input"
+                  v-model="aparelho.numero_serie"
+                  :class="{ 'is-danger': errors.iNumSerie }"
                 />
               </p>
+              <p class="help is-danger">{{ errors.iNumSerie }}</p>
             </div>
           </div>
         </div>
 
         <!-- Linha Vinculada -->
-        <div class="field is-horizontal">
+        <!-- <div class="field is-horizontal">
           <div class="field-label is-normal">
             <label class="label">Linha Telefônica</label>
           </div>
           <div class="field-body">
-            <div class="field">
-              <p class="control is-expanded">
-                <label class="input">{{ aparelho.linha ? `(${aparelho.linha.ddd}) ${aparelho.linha.numero}` : 'N/D' }}</label>
-              </p>
+            <div class="field is-narrow">
+              <div class="control">
+                <div class="select">
+                  <Field name="iLinha" as="select" v-model="linhaTelefonica">
+                    <option value="" selected>Selecione uma linha</option>
+                    <option value="1">(11) 91234-5678</option>
+                    <option value="2">(61) 98765-4321</option>
+                  </Field>
+                </div>
+              </div>
             </div>
           </div>
-        </div>
+        </div> -->
 
         <!-- Status -->
         <div class="field is-horizontal">
@@ -146,7 +180,11 @@
           <div class="field-body">
             <div class="field">
               <p class="control is-expanded">
-                <label class="input">{{ aparelho.funcionario ? aparelhoStatus.EM_USO : aparelhoStatus.DISPONIVEL }}</label>
+                <label class="input">{{
+                  linhaTelefonica != ""
+                    ? aparelhoStatus.EM_USO
+                    : aparelhoStatus.DISPONIVEL
+                }}</label>
               </p>
             </div>
           </div>
@@ -160,10 +198,11 @@
           <div class="field-body">
             <div class="field is-grouped">
               <div class="control">
-                <button class="button is-primary">Salvar</button>
+                <!-- <button class="button is-primary">Salvar</button> -->
+                <input type="submit" class="button is-primary" value="Salvar">
               </div>
               <div class="control">
-                <button class="button is-light">Cancelar</button>
+                <router-link to="/aparelhos" class="button is-light">Cancelar</router-link>
               </div>
             </div>
           </div>
@@ -180,7 +219,7 @@ import * as Yup from "yup";
 import { useStore } from "@/store";
 import useNotificator from "@/hooks/Notificator";
 import IAparelho, { AparelhoStatus } from "@/interfaces/IAparelho";
-import { POST_APARELHO } from "@/store/modules/aparelho/constants/action-type";
+import { DELETE_APARELHO, POST_APARELHO, PUT_APARELHO } from "@/store/modules/aparelho/constants/action-type";
 import { NotificationType } from "@/interfaces/INotification";
 
 export default defineComponent({
@@ -196,27 +235,20 @@ export default defineComponent({
   },
   data() {
     const aparelhoSchema = Yup.object().shape({
-      iIMEI: Yup.number()
-        .required('O campo IMEI é obrigatório')
-        .typeError('O campo IMEI deve conter somente números')
-        .max(17, 'O campo IMEI deve conter entre 15 e 17 números')
-        .min(15, 'O campo IMEI deve conter entre 15 e 17 números'),
-      iIMEI2: Yup.number()
-        .required('O campo IMEI é obrigatório')
-        .typeError('O campo IMEI deve conter somente números')
-        .max(17, 'O campo IMEI deve conter entre 15 e 17 números')
-        .min(15, 'O campo IMEI deve conter entre 15 e 17 números'),
-      iFabricante: Yup.string()
-        .required('O campo Fabricante é obrigatório'),
-      iMarca: Yup.string()
-        .required('O campo Fabricante é obrigatório'),
-      iModelo: Yup.string()
-        .required('O campo Fabricante é obrigatório'),
-      iNumSerie: Yup.string()
-        .required('O campo Número de Série é obrigatório')
+      iIMEI: Yup.string()
+        .required("O campo IMEI é obrigatório")
+        .matches(/^[0-9]{15,17}$/i, "O campo IMEI deve conter entre 15 e 17 números"),
+      iIMEI2: Yup.string()
+        .required("O campo IMEI é obrigatório")
+        .matches(/^[0-9]{15,17}$/i, "O campo IMEI deve conter entre 15 e 17 números"),
+      iFabricante: Yup.string().required("O campo Fabricante é obrigatório"),
+      iMarca: Yup.string().required("O campo Fabricante é obrigatório"),
+      iModelo: Yup.string().required("O campo Fabricante é obrigatório"),
+      iNumSerie: Yup.string().required("O campo Número de Série é obrigatório"),
     });
     return {
       aparelhoSchema,
+      linhaTelefonica: "",
     };
   },
   setup(props) {
@@ -240,19 +272,49 @@ export default defineComponent({
   },
   methods: {
     saveAparelho() {
-      if(this.id){
-        console.log('ALTERANDO APARELHO');
-      }else {
+      if (this.id) {
+        console.log("ALTERANDO APARELHO");
+        this.store
+          .dispatch(PUT_APARELHO, this.aparelho)
+          .then(() => {
+            this.notify(
+              NotificationType.SUCCESS,
+              `Aparelho ${this.aparelho.marca}-${this.aparelho.modelo} alterado com sucesso!`
+            );
+            this.$router.push('/aparelhos');
+          })
+          .catch(err => {
+            this.notify(NotificationType.DANGER, err.response.data.message);
+          });
+      } else {
+        this.aparelho.status = this.aparelhoStatus.DISPONIVEL;
         this.store
           .dispatch(POST_APARELHO, this.aparelho)
           .then(() => {
-            this.notify(NotificationType.SUCCESS, `Aparelho ${this.aparelho.marca}-${this.aparelho.modelo} cadastrado com sucesso!`);
+            this.notify(
+              NotificationType.SUCCESS,
+              `Aparelho ${this.aparelho.marca}-${this.aparelho.modelo} cadastrado com sucesso!`
+            );
+            this.$router.push('/aparelhos');
           })
-          .catch(err => {
-            this.notify(NotificationType.DANGER, err.response.data.mensagem);
+          .catch((err) => {
+            this.notify(NotificationType.DANGER, err.response.data.message);
           });
       }
     },
+    deleteAparelho(aparelho: IAparelho) {
+      this.store
+        .dispatch(DELETE_APARELHO, aparelho.id)
+        .then(() => {
+          this.notify(
+            NotificationType.SUCCESS,
+            `Aparelho ${aparelho.marca}-${aparelho.modelo} excluído com sucesso!`
+          );
+        })
+        .catch(err => {
+          this.notify(NotificationType.DANGER, err.response.data.message);
+        });
+    }
   },
 });
 </script>
