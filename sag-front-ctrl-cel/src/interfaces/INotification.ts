@@ -8,3 +8,9 @@ export default interface INotification {
     type: NotificationType,
     message: string,
 }
+
+export interface IModalNotification {
+    title: string,
+    message: string,
+    modalType: NotificationType,
+}

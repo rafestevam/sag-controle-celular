@@ -1,15 +1,15 @@
 <template>
-    <div class="sag-notifications">
-            <div 
-            class="notification"
-            v-for="notif in notifications"
-            :class="ctx[notif.type]"
-            :key="notif.id"
-            >
-                <button class="delete"></button>
-                {{  notif.message }}
-            </div>
+  <div class="sag-notifications">
+    <div
+      v-for="notif in notifications"
+      class="notification"
+      :class="ctx[notif.type]"
+      :key="notif.id"
+    >
+      <button class="delete" @click="emitCloseNotification(notif.id)"></button>
+      {{ notif.message }}
     </div>
+  </div>
 </template>
 
 <script lang="ts">
@@ -18,27 +18,33 @@ import INotification, { NotificationType } from "@/interfaces/INotification";
 import { useStore } from "@/store";
 
 export default defineComponent({
-    name: 'NotificationComponent',
-    props: {
-        notification: {
-            type: Object as PropType<INotification>,
-        },
+  name: "NotificationComponent",
+  emits: ['onCloseNotification'],
+  props: {
+    notification: {
+      type: Object as PropType<INotification>,
     },
-    data() {
-        return {
-            ctx: {
-                [NotificationType.SUCCESS]: 'is-success',
-                [NotificationType.WARNING]: 'is-warning',
-                [NotificationType.DANGER]: 'is-danger',
-            }
-        }
-    },
-    setup() {
-        const store = useStore();
+  },
+  data() {
+    return {
+      ctx: {
+        [NotificationType.SUCCESS]: "is-success",
+        [NotificationType.WARNING]: "is-warning",
+        [NotificationType.DANGER]: "is-danger",
+      },
+    };
+  },
+  setup() {
+    const store = useStore();
 
-        return {
-            notifications: computed(() => store.state.notifications),
-        }
+    return {
+      notifications: computed(() => store.state.notifications),
+    };
+  },
+  methods: {
+    emitCloseNotification(idNotification: string) {
+      this.$emit('onCloseNotification', idNotification);
     }
-})
+  }
+});
 </script>
