@@ -15,15 +15,11 @@ class AparelhoModel(db.Model):
     numero_serie = db.Column(db.String)
     status = db.Column(db.String)
 
-    # Relacionamento 1:1 - Linhas -> Aparelhos
-    linha_id = db.Column(db.String, db.ForeignKey("linhas.id"))
-    linha = db.relationship("LinhaModel", backref=backref("aparelhos", uselist=False))
-
-    # Relacionamento 1:N - Funcionarios -> Aparelhos
+    # Relacionamento 1:1 - Funcionarios -> Aparelhos
     funcionario_id = db.Column(db.String, db.ForeignKey("funcionarios.id"))
-    funcionario = db.relationship("FuncionarioModel", back_populates="aparelhos")
+    #funcionario = db.relationship("FuncionarioModel", backref=backref("aparelhos", uselist=False))
 
-    def __init__(self, imei, imei_2, fabricante, marca, modelo, numero_serie, status, funcionario_id, linha_id):
+    def __init__(self, imei, imei_2, fabricante, marca, modelo, numero_serie, status, funcionario_id):
         self.id = str(uuid.uuid4())
         self.imei = imei
         self.imei_2 = imei_2
@@ -33,7 +29,6 @@ class AparelhoModel(db.Model):
         self.numero_serie = numero_serie
         self.status = status
         self.funcionario_id = funcionario_id
-        self.linha_id = linha_id
 
     def to_json(self):
         return {
@@ -46,7 +41,6 @@ class AparelhoModel(db.Model):
             "numero_serie": self.numero_serie,
             "status": self.status,
             "funcionario_id": self.funcionario_id,
-            "linha_id": self.linha_id
         }
 
     def upsert(self):
