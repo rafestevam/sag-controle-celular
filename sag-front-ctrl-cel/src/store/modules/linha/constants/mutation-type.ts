@@ -1,0 +1,1 @@
+export const LIST_ALL_LINHAS = 'LIST_ALL_LINHAS';
