@@ -1,4 +1,5 @@
 from db import db
+from sqlalchemy.orm import backref
 import uuid
 import sys
 
@@ -9,7 +10,8 @@ class CentroCustoModel(db.Model):
     cc_cod = db.Column(db.String)
     cc_nome = db.Column(db.String)
 
-    funcionarios = db.relationship("FuncionarioModel", lazy="dynamic", viewonly=True)
+    #funcionarios = db.relationship("FuncionarioModel", lazy="dynamic", viewonly=True)
+    funcionarios = db.relationship("FuncionarioModel", backref=backref("centros_custo", uselist=False), lazy="dynamic")
 
     def __init__(self, cc_cod, cc_nome):
         self.id = str(uuid.uuid4())
@@ -64,6 +66,27 @@ class CentroCustoModel(db.Model):
     def get_all(cls):
         try:
             return [centro_custo.to_json() for centro_custo in cls.query.all()]
+        except:
+            error = sys.exc_info()[1]
+            raise RuntimeError(error)
+
+    @classmethod
+    def get_all_paginated(cls, num_page):
+        try:
+            pages = cls.query.paginate(per_page=10, error_out=True).pages
+            if num_page <= pages:
+                return [centro_custo.to_json() for centro_custo in cls.query.paginate(per_page=10, page=num_page, error_out=True).items]
+            else:
+                raise RuntimeError(f'O número total de páginas ({pages}) foi extrapolado')
+        except:
+            error = sys.exc_info()[1]
+            raise RuntimeError(error)
+
+    @classmethod
+    def get_number_of_pages(cls):
+        try:
+            pages = cls.query.paginate(per_page=10, error_out=True).pages
+            return pages
         except:
             error = sys.exc_info()[1]
             raise RuntimeError(error)
