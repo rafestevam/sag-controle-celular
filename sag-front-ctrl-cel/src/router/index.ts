@@ -1,4 +1,4 @@
-import { createRouter, RouteRecordRaw, createWebHashHistory } from "vue-router";
+import { createRouter, RouteRecordRaw, createWebHistory } from "vue-router";
 import Home from '@/views/Home.vue';
 import CentroCusto from '@/views/CentroCusto.vue';
 import FormularioCC from "@/views/CentroCusto/FormularioCC.vue";
@@ -18,6 +18,9 @@ const routes:  RouteRecordRaw[] = [
         path: '/',
         name: 'Home',
         component: Home,
+        // meta: {
+        //     requiresAuth: true,
+        // }
     },
     {
         path: '/cc',
@@ -55,6 +58,12 @@ const routes:  RouteRecordRaw[] = [
                 name: 'FormularioLinhas',
                 component: FormularioLinhas,
             },
+            {
+                path: ':id',
+                name: 'AtualizarLinha',
+                component: FormularioLinhas,
+                props: true,
+            },
         ],
     },
     {
@@ -71,6 +80,12 @@ const routes:  RouteRecordRaw[] = [
                 name: 'FormularioAparelhos',
                 component: FormularioAparelhos,
             },
+            {
+                path: ':id',
+                name: 'AtualizarAparelho',
+                component: FormularioAparelhos,
+                props: true,
+            }
         ],
     },
     {
@@ -92,8 +107,10 @@ const routes:  RouteRecordRaw[] = [
 ];
 
 const router = createRouter({
-    history: createWebHashHistory(),
+    history: createWebHistory(),
     routes
 });
+
+// registerGuard(router);
 
 export default router;
