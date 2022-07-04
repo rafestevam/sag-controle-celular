@@ -1,4 +1,6 @@
 from db import db
+from sqlalchemy.orm import backref
+from sqlalchemy.orm.collections import attribute_mapped_collection
 import uuid
 import sys
 
@@ -7,6 +9,7 @@ class FuncionarioModel(db.Model):
 
     id = db.Column(db.String, primary_key=True)
     nome = db.Column(db.String)
+    sobrenome = db.Column(db.String)
     nome_social = db.Column(db.String)
     admissao = db.Column(db.String)
     data_nascimento = db.Column(db.String)
@@ -16,13 +19,18 @@ class FuncionarioModel(db.Model):
 
     # Relacionamento 1:N - Centros Custo -> Funcionarios
     centros_custo_id = db.Column(db.String, db.ForeignKey("centros_custo.id"))
-    centros_custo = db.relationship("CentroCustoModel")
+    #centros_custo = db.relationship("CentroCustoModel")
 
-    aparelhos = db.relationship("AparelhoModel", lazy="dynamic", back_populates="funcionario")
+    # # Relacionamento 1:N - Funcionarios -> Linhas
+    linhas = db.relationship("LinhaModel", backref=backref("funcionarios", uselist=False), lazy="dynamic", collection_class=attribute_mapped_collection("id"))
 
-    def __init__(self, nome, nome_social, admissao, data_nascimento, cargo, rg, cpf, centro_custo_id):
+    # # Relacionamento 1:N - Aparelhos -> Funcionarios
+    aparelhos = db.relationship("AparelhoModel", backref=backref("funcionarios", uselist=False), lazy="dynamic", collection_class=attribute_mapped_collection("id"))
+
+    def __init__(self, nome, sobrenome, nome_social, admissao, data_nascimento, cargo, rg, cpf, centro_custo_id, linhas, aparelhos):
         self.id = str(uuid.uuid4())
         self.nome = nome
+        self.sobrenome = sobrenome
         self.nome_social = nome_social
         self.admissao = admissao
         self.data_nascimento = data_nascimento
@@ -30,11 +38,14 @@ class FuncionarioModel(db.Model):
         self.rg = rg
         self.cpf = cpf
         self.centros_custo_id = centro_custo_id
+        self.linhas = linhas
+        self.aparelhos = aparelhos
 
     def to_json(self):
         return {
             "id": self.id,
             "nome": self.nome,
+            "sobrenome": self.sobrenome,
             "nome_social": self.nome_social,
             "admissao": self.admissao,
             "data_nascimento": self.data_nascimento,
@@ -42,6 +53,7 @@ class FuncionarioModel(db.Model):
             "rg": self.rg,
             "cpf": self.cpf,
             "centro_custo_id": self.centros_custo_id,
+            "linhas": [linha.to_json() for linha in self.linhas.all()],
             "aparelhos": [aparelho.to_json() for aparelho in self.aparelhos.all()]
         }
 
