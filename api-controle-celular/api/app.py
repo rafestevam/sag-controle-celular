@@ -15,7 +15,7 @@ from models.aparelho import AparelhoModel
 
 # Importação dos Resources
 from resources.hello import HelloResource
-from resources.centro_custo import CentroCustoResource, CentroCustoResourceList
+from resources.centro_custo import CentroCustoResource, CentroCustoResourceList, CentroCustoResourceListPaginated, CentroCustoResourcePages
 from resources.funcionario import FuncionarioResource, FuncionarioListResource
 from resources.linha import LinhaResource, LinhaListResource
 from resources.aparelho import AparelhoResource, AparelhoListResource
@@ -41,6 +41,8 @@ def create_tables():
 api.add_resource(HelloResource, '/hello')
 api.add_resource(CentroCustoResource, '/cc/<string:id>')
 api.add_resource(CentroCustoResourceList, '/cc')
+api.add_resource(CentroCustoResourceListPaginated, '/cc/<int:page_num>')
+api.add_resource(CentroCustoResourcePages, '/cc/pages')
 api.add_resource(FuncionarioResource, '/funcionarios/<string:id>')
 api.add_resource(FuncionarioListResource, '/funcionarios')
 api.add_resource(LinhaResource, '/linhas/<string:id>')
