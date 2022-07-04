@@ -1,4 +1,5 @@
 from db import db
+from sqlalchemy.orm import backref
 import uuid
 import sys
 
@@ -11,12 +12,17 @@ class LinhaModel(db.Model):
     classificacao = db.Column(db.String)
     status = db.Column(db.String)
 
-    def __init__(self, ddd, numero, classificacao, status):
+    # Relacionamento 1:N - Funcionarios -> Linhas
+    funcionario_id = db.Column(db.String, db.ForeignKey("funcionarios.id"))
+    #funcionarios = db.relationship("FuncionarioModel", backref=backref("linhas", uselist=False))
+
+    def __init__(self, ddd, numero, classificacao, status, funcionario_id):
         self.id = str(uuid.uuid4())
         self.ddd = ddd
         self.numero = numero
         self.classificacao = classificacao
         self.status = status
+        self.funcionario_id = funcionario_id
 
     def to_json(self):
         return {
@@ -24,7 +30,8 @@ class LinhaModel(db.Model):
             "ddd": self.ddd,
             "numero": self.numero,
             "classificacao": self.classificacao,
-            "status": self.status
+            "status": self.status,
+            "funcionario_id": self.funcionario_id
         }
 
     def upsert(self):
