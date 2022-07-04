@@ -4,7 +4,7 @@
   </div>
   <section class="main-form">
     <div class="container is-widescreen">
-      <Form @submit.prevent="saveCentroCusto" :validation-schema="schema" v-slot="{ errors }">
+      <Form @submit="saveCentroCusto" :validation-schema="schema" v-slot="{ errors }">
       <!-- Código -->
       <div class="field is-horizontal">
         <div class="field-label is-normal">
@@ -43,7 +43,8 @@
           <div class="field-body">
             <div class="field is-grouped">
               <div class="control">
-                <button class="button is-primary">Salvar</button>
+                <!-- <button class="button is-primary" type="submit">Salvar</button> -->
+                <input type="submit" class="button is-primary" value="Salvar">
               </div>
               <div class="control">
                 <router-link 
@@ -83,9 +84,10 @@ export default defineComponent({
   },
   data() {
     const schema = Yup.object().shape({
-      iCodigo: Yup.number()
+      iCodigo: Yup.string()
         .required('O campo Código é obrigatório')
-        .typeError('O campo Código deve conter somente números')
+        // .typeError('O campo Código deve conter somente números')
+        .matches(/^[0-9]{6}$/i, 'O campo Código deve conter somente números')
         .max(6, 'O campo Código deve conter somente 6 números')
         .min(6, 'O campo Código deve conter 6 números'),
       iNome: Yup.string()
@@ -122,7 +124,7 @@ export default defineComponent({
             this.$router.push('/cc');
           })
           .catch(err => {
-            this.notify(NotificationType.DANGER, `${err.response.data.mensagem}`);
+            this.notify(NotificationType.DANGER, `${err.response.data.message}`);
           });
       } else {
         this.store
@@ -132,7 +134,7 @@ export default defineComponent({
             this.$router.push('/cc');
           })
           .catch(err => {
-            this.notify(NotificationType.DANGER, `${err.response.data.mensagem}`);
+            this.notify(NotificationType.DANGER, `${err.response.data.message}`);
           })
       }
     },
