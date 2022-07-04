@@ -1,1 +1,3 @@
 export const NOTIFY = 'NOTIFY';
+export const DELETE_NOTIFICATION = 'DELETE_NOTIFICATION';
+export const MODAL_NOTIFY = 'MODAL_NOTIFY';
