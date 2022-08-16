@@ -31,3 +31,4 @@ pnpm-debug.log*
 *.drawio
 *.xlsx
 *.db
+*.csv
