@@ -22,6 +22,7 @@ from resources.aparelho import AparelhoResource, AparelhoListResource
 
 # Importação dos Resources para Bulk Loading
 from resources.bulk_centro_custo import BulkCentroCusto
+from resources.bulk_aparelho import BulkAparelho
 
 app = Flask(__name__) # Inicializando API
 CORS(app)
@@ -53,6 +54,8 @@ api.add_resource(LinhaListResource, '/linhas')
 api.add_resource(AparelhoResource, '/aparelhos/<string:id>')
 api.add_resource(AparelhoListResource, '/aparelhos')
 api.add_resource(BulkCentroCusto, '/bulk/cc')
+api.add_resource(BulkAparelho, '/bulk/aparelho')
+
 
 # Inicialização da app Python
 if __name__ == '__main__':
