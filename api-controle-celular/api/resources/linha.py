@@ -15,10 +15,13 @@ class LinhaResource(Resource):
         required=True,
         help="Este campo não pode estar vazio"
     )
-    data_parser.add_argument("funcionario_id",
-        type=str,
-        required=True,
-        help="Este campo não pode estar vazio"
+    # data_parser.add_argument("funcionario_id",
+    #     type=str,
+    #     # required=True,
+    #     # help="Este campo não pode estar vazio"
+    # )
+    data_parser.add_argument("aparelho_id",
+        type=str
     )
 
     @cross_origin()
@@ -41,7 +44,18 @@ class LinhaResource(Resource):
             
             linha.classificacao = data["classificacao"]
             linha.status = data["status"]
-            linha.funcionario_id = data["funcionario_id"]
+            # linha.funcionario_id = data["funcionario_id"]
+
+            if (linha.aparelho_id == None or linha.aparelho_id != data["aparelho_id"]):
+                linha_vinc = LinhaModel.find_by_aparelho(data["aparelho_id"])
+                if linha_vinc:
+                    return {"message": "Esta linha já está vinculada a um aparelho"}, 400
+
+            linha.aparelho_id = data["aparelho_id"]
+
+            if(linha.status == "em uso" and not linha.aparelho_id):
+                return {"message": "Para status 'Em Uso', a linha deve estar atribuída a um aparelho"}, 400
+
             linha.upsert()
             return linha.to_json(), 200
         except RuntimeError as e:
@@ -81,10 +95,13 @@ class LinhaListResource(Resource):
         required=True,
         help="Este campo não pode estar vazio"
     )
-    data_parser.add_argument("funcionario_id",
-        type=str,
-        required=False,
-        # help="Este campo não pode estar vazio"
+    # data_parser.add_argument("funcionario_id",
+    #     type=str,
+    #     required=False,
+    #     # help="Este campo não pode estar vazio"
+    # )
+    data_parser.add_argument("aparelho_id",
+        type=str
     )
 
     # @cross_origin()
@@ -96,11 +113,18 @@ class LinhaListResource(Resource):
             if linha:
                 return {"message": f"Linha {numero} já existente"}, 400
 
+            # funcionario = data["funcionario_id"]
+            # if status == "em uso" and not funcionario:
+            #     return {"message": "Para status 'Em Uso', a linha deve estar atribuída a um funcionário"}, 400
             status = data["status"]
-            funcionario = data["funcionario_id"]
-            if status == "em uso" and not funcionario:
-                return {"message": "Para status 'Em Uso', a linha deve estar atribuída a um funcionário"}, 400
-            
+            aparelho_id = data["aparelho_id"]
+            if status == "em uso" and not aparelho_id:
+                return {"message": "Para status 'em uso', a linha deve estar atribuída a um aparelho"}, 400
+
+            linha = LinhaModel.find_by_aparelho(aparelho_id)
+            if linha:
+                return {"message": "Esta linha já está vinculada a um aparelho"}, 400
+
             linha = LinhaModel(**data)
 
             linha.upsert()
