@@ -6,6 +6,10 @@ flask_session
 apicel
 __pycache__
 
+# Recursive pycache and vscode folders
+**/__pycache__
+**/.vscode
+
 # local env files
 .env.local
 .env.*.local
