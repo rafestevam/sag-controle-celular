@@ -72,7 +72,7 @@ class AparelhoResource(Resource):
             if data["funcionario_id"]:
                 aparelho.funcionario_id = data["funcionario_id"]
             # if data["linha_id"]:
-            #     aparelho.linha_id = data["linha_id"]
+            # aparelho.linha_id = data["linha_id"]
             
             aparelho.upsert()
             return aparelho.to_json(), 200
@@ -151,7 +151,7 @@ class AparelhoListResource(Resource):
             status = data["status"]
             funcionario = data["funcionario_id"]
             if status == "em uso" and not funcionario:
-                return {"message": "Para status 'Em Uso', o aparelho deve estar atribuída a um funcionário"}, 400
+                return {"message": "Para status 'Em Uso', o aparelho deve estar atribuído a um funcionário"}, 400
             
             aparelho = AparelhoModel(**data)
 
