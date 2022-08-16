@@ -1,5 +1,6 @@
 from db import db
 from sqlalchemy.orm import backref
+from sqlalchemy.orm.collections import attribute_mapped_collection
 import uuid
 import sys
 
@@ -10,13 +11,15 @@ class CentroCustoModel(db.Model):
     cc_cod = db.Column(db.String)
     cc_nome = db.Column(db.String)
 
+    # Relacionamento 1:N - Centros de Custo -> Funcionarios
     #funcionarios = db.relationship("FuncionarioModel", lazy="dynamic", viewonly=True)
-    funcionarios = db.relationship("FuncionarioModel", backref=backref("centros_custo", uselist=False), lazy="dynamic")
+    funcionarios = db.relationship("FuncionarioModel", backref=backref("centros_custo", uselist=False), lazy="dynamic", collection_class=attribute_mapped_collection("id"))
 
     def __init__(self, cc_cod, cc_nome):
         self.id = str(uuid.uuid4())
         self.cc_cod = cc_cod
         self.cc_nome = cc_nome
+        # self.funcionarios = funcionarios
 
     def to_json(self):
         return {
