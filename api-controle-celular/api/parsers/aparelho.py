@@ -17,10 +17,10 @@ class AparelhoParser:
                 'status', 
                 'funcionario_id'
             ]
-            csvData = pd.read_csv(file_path, names=col_names, header=None)
+            csv_data = pd.read_csv(file_path, names=col_names, header=None)
 
             # Iteração sobre o CSV para insersão no Banco de Dados
-            for i, row in csvData.iterrows():
+            for i, row in csv_data.iterrows():
                 if i == 0:
                     # Validação das colunas esperadas
                     if(row['imei'] != 'imei' or
