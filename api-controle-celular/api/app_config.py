@@ -26,3 +26,6 @@ ENDPOINT = 'https://graph.microsoft.com/v1.0/users'  # This resource requires no
 SCOPES = ["https://graph.microsoft.com/.default"]
 
 SESSION_TYPE = "filesystem"  # Specifies the token cache should be stored in server-side session
+
+# Configurations for upload bulk CSV files
+UPLOAD_FOLDER = 'static/files'
