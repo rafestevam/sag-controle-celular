@@ -27,7 +27,7 @@ class FuncionarioModel(db.Model):
     # # Relacionamento 1:N - Aparelhos -> Funcionarios
     aparelhos = db.relationship("AparelhoModel", backref=backref("funcionarios", uselist=False), lazy="dynamic", collection_class=attribute_mapped_collection("id"))
 
-    def __init__(self, nome, sobrenome, nome_social, admissao, data_nascimento, cargo, rg, cpf, centro_custo_id, linhas, aparelhos):
+    def __init__(self, nome, sobrenome, nome_social, admissao, data_nascimento, cargo, rg, cpf, centro_custo_id):
         self.id = str(uuid.uuid4())
         self.nome = nome
         self.sobrenome = sobrenome
