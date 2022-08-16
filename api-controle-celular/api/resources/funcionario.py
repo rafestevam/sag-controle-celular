@@ -48,14 +48,14 @@ class FuncionarioResource(Resource):
         required=False,
         help="Um funcionário deve pertencer a um centro de custo"
     )
-    data_parser.add_argument("linhas",
-        type=str,
-        action='append'
-    )
-    data_parser.add_argument("aparelhos",
-        type=str,
-        action='append'
-    )
+    # data_parser.add_argument("linhas",
+    #     type=str,
+    #     action='append'
+    # )
+    # data_parser.add_argument("aparelhos",
+    #     type=str,
+    #     action='append'
+    # )
     
 
     def get(self, id):
@@ -82,9 +82,9 @@ class FuncionarioResource(Resource):
             funcionario.cargo = data["cargo"]
             funcionario.rg = data["rg"]
             funcionario.cpf = data["cpf"]
-            funcionario.centro_custo_id = data["centro_custo_id"]
-            funcionario.linhas = data["linhas"]
-            funcionario.aparelhos = data["aparelhos"]
+            funcionario.centros_custo_id = data["centro_custo_id"]
+            # funcionario.linhas = data["linhas"]
+            # funcionario.aparelhos = data["aparelhos"]
             funcionario.upsert()
             return funcionario.to_json()
         except RuntimeError as e:
@@ -162,6 +162,9 @@ class FuncionarioListResource(Resource):
             funcionario = FuncionarioModel.find_by_cpf(cpf)
             if funcionario:
                 return {"message": f"Funcionario com o CPF {cpf} já existente"}
+            
+            data["linhas"] = []
+            data["aparelhos"] = []
 
             funcionario = FuncionarioModel(**data)
             funcionario.upsert()

@@ -17,12 +17,12 @@ class FuncionarioModel(db.Model):
     rg = db.Column(db.String)
     cpf = db.Column(db.String)
 
-    # Relacionamento 1:N - Centros Custo -> Funcionarios
+    # Relacionamento 1:N - Funcionarios -> Centros de Custo
     centros_custo_id = db.Column(db.String, db.ForeignKey("centros_custo.id"))
     #centros_custo = db.relationship("CentroCustoModel")
 
     # # Relacionamento 1:N - Funcionarios -> Linhas
-    linhas = db.relationship("LinhaModel", backref=backref("funcionarios", uselist=False), lazy="dynamic", collection_class=attribute_mapped_collection("id"))
+    # linhas = db.relationship("LinhaModel", backref=backref("funcionarios", uselist=False), lazy="dynamic", collection_class=attribute_mapped_collection("id"))
 
     # # Relacionamento 1:N - Aparelhos -> Funcionarios
     aparelhos = db.relationship("AparelhoModel", backref=backref("funcionarios", uselist=False), lazy="dynamic", collection_class=attribute_mapped_collection("id"))
@@ -38,8 +38,8 @@ class FuncionarioModel(db.Model):
         self.rg = rg
         self.cpf = cpf
         self.centros_custo_id = centro_custo_id
-        self.linhas = linhas
-        self.aparelhos = aparelhos
+        # self.linhas = linhas
+        # self.aparelhos = aparelhos
 
     def to_json(self):
         return {
@@ -53,7 +53,7 @@ class FuncionarioModel(db.Model):
             "rg": self.rg,
             "cpf": self.cpf,
             "centro_custo_id": self.centros_custo_id,
-            "linhas": [linha.to_json() for linha in self.linhas.all()],
+            # "linhas": [linha.to_json() for linha in self.linhas.all()],
             "aparelhos": [aparelho.to_json() for aparelho in self.aparelhos.all()]
         }
 
