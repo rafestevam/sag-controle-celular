@@ -7,17 +7,9 @@ import werkzeug
 
 class BulkCentroCusto(Resource):
 
-    # file_parser = reqparse.RequestParser()
-    # file_parser.add_argument('file',
-    #     type=werkzeug.datastructures.FileStorage,
-    #     location=app_config.UPLOAD_FOLDER
-    # )
-
     def post(self):
         try:
             uploaded_file = request.files['file']
-            # args = BulkCentroCusto.file_parser.par1se_args()
-            # uploaded_file = args['file']
             if uploaded_file.filename:
                 file_path = os.path.join(app_config.UPLOAD_FOLDER, uploaded_file.filename)
                 uploaded_file.save(file_path)
