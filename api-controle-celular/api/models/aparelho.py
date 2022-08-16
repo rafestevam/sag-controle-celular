@@ -36,6 +36,10 @@ class AparelhoModel(db.Model):
         # self.linha = self.linha.to_json()
 
     def to_json(self):
+        linha = None
+        if self.linha:
+            linha = self.linha.to_json()
+
         return {
             "id": self.id,
             "imei": self.imei,
@@ -46,7 +50,8 @@ class AparelhoModel(db.Model):
             "numero_serie": self.numero_serie,
             "status": self.status,
             "funcionario_id": self.funcionario_id,
-            "linha": self.linha.to_json()
+            "linha": linha
+            # "linha": self.linha.to_json() or None
         }
 
     def upsert(self):
