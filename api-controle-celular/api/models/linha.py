@@ -13,7 +13,7 @@ class LinhaModel(db.Model):
     status = db.Column(db.String)
 
     # Relacionamento 1:N - Funcionarios -> Linhas
-    # funcionario_id = db.Column(db.String, db.ForeignKey("funcionarios.id"))
+    funcionario_id = db.Column(db.String, db.ForeignKey("funcionarios.id"))
     #funcionarios = db.relationship("FuncionarioModel", backref=backref("linhas", uselist=False))
 
     # Relacionamento 1:1 - Linhas -> Aparelhos
