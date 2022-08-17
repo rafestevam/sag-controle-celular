@@ -56,6 +56,9 @@ class LinhaResource(Resource):
             if(linha.status == "em uso" and not linha.aparelho_id):
                 return {"message": "Para status 'Em Uso', a linha deve estar atribuída a um aparelho"}, 400
 
+            if(aparelho_id and funcionario_id):
+                return {"message": "A linha não pode estar atribuída a um aparelho e a um funcionário ao mesmo tempo"}, 400
+
             linha.upsert()
             return linha.to_json(), 200
         except RuntimeError as e:
@@ -121,6 +124,9 @@ class LinhaListResource(Resource):
             aparelho_id = data["aparelho_id"]
             if (status == "em uso") and not (aparelho_id or funcionario_id):
                 return {"message": "Para status 'em uso', a linha deve estar atribuída a um aparelho ou a um funcionário"}, 400
+
+            if(aparelho_id and funcionario_id):
+                return {"message": "A linha não pode estar atribuída a um aparelho e a um funcionário ao mesmo tempo"}, 400
 
             linha = LinhaModel.find_by_aparelho(aparelho_id)
             if linha:
