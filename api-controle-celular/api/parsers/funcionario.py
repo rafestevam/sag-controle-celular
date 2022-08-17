@@ -9,6 +9,7 @@ class FuncionarioParser:
     def parseCSV(cls, file_path):
         try:
             col_names = [
+                'operacao',
                 'nome',
                 'sobrenome',
                 'nome_social',
@@ -26,7 +27,8 @@ class FuncionarioParser:
             for i, row in csv_data.iterrows():
                 if i == 0:
                     # Validação das colunas esperadas
-                    if(row['nome'] != 'nome' or
+                    if(row['operacao'] != 'operacao' or
+                       row['nome'] != 'nome' or
                        row['sobrenome'] != 'sobrenome' or
                        row['nome_social'] != 'nome_social' or
                        row['admissao'] != 'admissao' or
@@ -35,8 +37,9 @@ class FuncionarioParser:
                        row['rg'] != 'rg' or
                        row['cpf'] != 'cpf' or
                        row['centro_custo_cod'] != 'centro_custo_cod'):
-                        raise RuntimeError("As colunas esperadas para o arquivo são 'nome', 'sobrenome', 'nome_social', 'admissao', 'data_nascimento', 'cargo', 'rg', 'cpf' e 'centro_custo_cod'")
+                        raise RuntimeError("As colunas esperadas para o arquivo são 'operacao', 'nome', 'sobrenome', 'nome_social', 'admissao', 'data_nascimento', 'cargo', 'rg', 'cpf' e 'centro_custo_cod'")
                 else:
+                    operacao = str(row['operacao']).strip()
                     nome = str(row['nome']).strip()
                     sobrenome = str(row['sobrenome']).strip()
                     nome_social = str(row['nome_social']).strip()
@@ -47,36 +50,64 @@ class FuncionarioParser:
                     cpf = str(row['cpf']).strip()
                     centro_custo_cod = str(row['centro_custo_cod']).strip()
 
+                    centros_custo_id = ''
+                    if not operacao or operacao == 'nan':
+                        raise RuntimeError(f"Para o Funcionário com o CPF {cpf}, é necessário apontar uma operação ('CRIAR', 'ALTERAR', 'DELETAR'")
+
+                    if not (operacao == 'CRIAR' or operacao == 'ALTERAR' or operacao == 'DELETAR'):
+                        raise RuntimeError("As operações esperadas são 'CRIAR', 'ALTERAR' ou 'DELETAR'")
+
                     if not rex.match(admissao):
                         raise RuntimeError(f"Funcionario com o CPF {cpf} - Campo 'admissao' deve estar no formato YYYY-MM-DD")
                     
                     if not rex.match(data_nascimento):
                         raise RuntimeError(f"Funcionario com o CPF {cpf} - Campo 'data_nascimento' deve estar no formato YYYY-MM-DD")
 
-                    employee = FuncionarioModel.find_by_cpf(cpf)
-                    if employee:
-                        raise RuntimeError(f"Funcionario com o CPF {cpf} já existente")
+                    if(operacao == 'CRIAR'):
+                        employee = FuncionarioModel.find_by_cpf(cpf)
+                        if employee:
+                            raise RuntimeError(f"Funcionario com o CPF {cpf} já existente")
 
-                    if not centro_custo_cod:
-                        raise RuntimeError(f"Funcionario com o CPF {cpf} deve pertencer a um centro de custo")
+                        if not centro_custo_cod:
+                            raise RuntimeError(f"Funcionario com o CPF {cpf} deve pertencer a um centro de custo")
 
-                    centros_custo_id = ''
-                    cc = CentroCustoModel.find_by_cc_cod(centro_custo_cod)
-                    if cc:
-                        centros_custo_id = cc.id
+                        cc = CentroCustoModel.find_by_cc_cod(centro_custo_cod)
+                        if cc:
+                            centros_custo_id = cc.id
 
-                    funcionario = FuncionarioModel(
-                        nome,
-                        sobrenome,
-                        nome_social,
-                        admissao,
-                        data_nascimento,
-                        cargo,
-                        rg,
-                        cpf,
-                        centros_custo_id
-                    )
-                    funcionario.upsert()
+                    if(operacao == 'ALTERAR'):
+                        employee = FuncionarioModel.find_by_cpf(cpf)
+                        if not employee:
+                            raise RuntimeError(f"Funcionario com o CPF {cpf} não existente")
+
+                        if not centro_custo_cod:
+                            raise RuntimeError(f"Funcionario com o CPF {cpf} deve pertencer a um centro de custo")
+
+                        if centro_custo_cod and centro_custo_cod != 'nan':
+                            cc = CentroCustoModel.find_by_cc_cod(centro_custo_cod)
+                            if cc:
+                                centros_custo_id = cc.id
+
+                    if(operacao == 'CRIAR' or operacao == 'ALTERAR'):
+                        funcionario = FuncionarioModel(
+                            nome,
+                            sobrenome,
+                            nome_social,
+                            admissao,
+                            data_nascimento,
+                            cargo,
+                            rg,
+                            cpf,
+                            centros_custo_id
+                        )
+                        funcionario.upsert()
+
+                    if(operacao == 'DELETAR'):
+                        func = FuncionarioModel.find_by_cpf(cpf)
+                        if func:
+                            func.delete()
+                        else:
+                            raise RuntimeError(f"O Funcionário com CPF {cpf} não existe para deleção")
         except:
             error = error = sys.exc_info()[1]
             raise RuntimeError(error)

@@ -9,6 +9,7 @@ class LinhaParser:
     def parseCSV(cls, file_path):
         try:
             col_names = [
+                'operacao',
                 'ddd',
                 'numero',
                 'classificacao',
@@ -21,42 +22,72 @@ class LinhaParser:
             for i, row in csv_data.iterrows():
                 if i == 0:
                     # Validação das colunas esperadas
-                    if(row['ddd'] != 'ddd' or
+                    if(row['operacao'] != 'operacao' or
+                       row['ddd'] != 'ddd' or
                        row['numero'] != 'numero' or
                        row['classificacao'] != 'classificacao' or
                        row['status'] != 'status' or
                        row['aparelho_imei'] != 'aparelho_imei'):
                         raise RuntimeError("As colunas esperadas para o arquivo são 'ddd', 'numero', 'classificacao', 'status' e 'aparelho_imei'")
                 else:
+                    operacao = str(row['operacao']).strip()
                     ddd = str(row['ddd']).strip()
                     numero = str(row['numero']).strip()
                     classificacao = str(row['classificacao']).strip()
                     status = str(row['status']).strip()
                     aparelho_imei = str(row['aparelho_imei']).strip()
+                    
+                    aparelho_id = ''
+                    if not operacao or operacao == 'nan':
+                        raise RuntimeError(f"Para a Linha com número {numero}, é necessário apontar uma operação ('CRIAR', 'ALTERAR', 'DELETAR'")
 
-                    ln = LinhaModel.find_by_numero(numero)
-                    if ln:
-                        raise RuntimeError(f"Linha {numero} já existente")
-
-                    if(status == 'em uso' and not aparelho_imei):
-                        raise RuntimeError(f"Para a linha {numero} com status 'em uso', a linha deve estar atribuída a um aparelho")
+                    if not (operacao == 'CRIAR' or operacao == 'ALTERAR' or operacao == 'DELETAR'):
+                        raise RuntimeError("As operações esperadas são 'CRIAR', 'ALTERAR' ou 'DELETAR'")
 
                     if(status != 'em uso' and aparelho_imei):
-                        status = 'em uso'
+                            status = 'em uso'
 
-                    aparelho_id = ''
-                    aparelho = AparelhoModel.find_by_imei(aparelho_imei)
-                    if aparelho:
-                        aparelho_id = aparelho.id
+                    if(operacao == 'CRIAR'):
+                        ln = LinhaModel.find_by_numero(numero)
+                        if ln:
+                            raise RuntimeError(f"Linha {numero} já existente")
 
-                    linha = LinhaModel(
-                        ddd,
-                        numero,
-                        classificacao,
-                        status,
-                        aparelho_id
-                    )
-                    linha.upsert()
+                        if(status == 'em uso' and not aparelho_imei):
+                            raise RuntimeError(f"Para a linha {numero} com status 'em uso', a linha deve estar atribuída a um aparelho")
+
+                        aparelho = AparelhoModel.find_by_imei(aparelho_imei)
+                        if aparelho:
+                            aparelho_id = aparelho.id
+                    
+                    if(operacao == 'ALTERAR'):
+                        ln = LinhaModel.find_by_numero(numero)
+                        if not ln:
+                            raise RuntimeError(f"Linha {numero} não existente")
+
+                        if(status == 'em uso' and not aparelho_imei):
+                            raise RuntimeError(f"Para a linha {numero} com status 'em uso', a linha deve estar atribuída a um aparelho")
+                    
+                        if(aparelho_imei and aparelho_imei != 'nan'):
+                            aparelho = AparelhoModel.find_by_imei(aparelho_imei)
+                            if aparelho:
+                                aparelho_id = aparelho.id
+
+                    if(operacao == 'CRIAR' or operacao == 'ALTERAR'):
+                        linha = LinhaModel(
+                            ddd,
+                            numero,
+                            classificacao,
+                            status,
+                            aparelho_id
+                        )
+                        linha.upsert()
+
+                    if(operacao == 'DELETAR'):
+                        line = LinhaModel.find_by_numero(numero)
+                        if line:
+                            line.delete()
+                        else:
+                            raise RuntimeError(f"A linha de numero {numero} não existe para deleção")
         except:
             error = error = sys.exc_info()[1]
             raise RuntimeError(error)                    
