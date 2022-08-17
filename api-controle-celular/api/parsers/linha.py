@@ -51,7 +51,7 @@ class LinhaParser:
                     if(status == 'em uso' and not (aparelho_imei or funcionario_cpf)):
                         raise RuntimeError(f"Para a linha {numero} com status 'em uso', a linha deve estar atribuída a um aparelho ou a um funcionário")
 
-                    if((aparelho_imei and aparelho_imei != 'nan') and (funcionario_cpf and funcionario_cpf =! 'nan')):
+                    if((aparelho_imei and aparelho_imei != 'nan') and (funcionario_cpf and funcionario_cpf != 'nan')):
                         raise RuntimeError(f"A linha {numero} não pode estar atribuída a um funcionario e a um aparelho ao mesmo tempo")
 
                     if(status != 'em uso' and aparelho_imei):
