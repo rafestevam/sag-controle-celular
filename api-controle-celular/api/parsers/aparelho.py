@@ -48,44 +48,30 @@ class AparelhoParser:
                     acessorios = str(row['acessorios']).strip()
                     status = str(row['status']).strip()
                     funcionario_cpf = str(row['funcionario_cpf']).strip()
-                    
+                    funcionario_id = ''
+
                     if not operacao or operacao == 'nan':
                         raise RuntimeError(f"Para o Aparelho com o IMEI {imei}, é necessário apontar uma operação ('CRIAR', 'ALTERAR', 'DELETAR'")
 
                     if not (operacao == 'CRIAR' or operacao == 'ALTERAR' or operacao == 'DELETAR'):
                         raise RuntimeError("As operações esperadas são 'CRIAR', 'ALTERAR' ou 'DELETAR'")
 
-                    funcionario_id = ''
+                    if status == 'em uso' and not funcionario_cpf:
+                        raise RuntimeError(f"Para o Aparelho com IMEI {imei}, com status 'Em Uso', o aparelho deve estar atribuído a um funcionário")
+                        
+                    if status != 'em uso' and funcionario_cpf != 'nan' and funcionario_cpf:
+                        status = 'em uso'
+
+                    if (funcionario_cpf != 'nan' and funcionario_cpf):
+                        funcionario = FuncionarioModel.find_by_cpf(funcionario_cpf)
+                        if funcionario:
+                            funcionario_id = funcionario.id
+                    
                     if (operacao == 'CRIAR'):
                         # Validação de duplicidade de registros
                         apar = AparelhoModel.find_by_imei(imei)
                         if apar:
                             raise RuntimeError(f"Aparelho com IMEI {imei} já cadastrado")
-
-                        # Validação de status e vinculação com funcionario
-                        if status == 'em uso' and not funcionario_cpf:
-                            raise RuntimeError(f"Para o Aparelho com IMEI {imei}, com status 'Em Uso', o aparelho deve estar atribuído a um funcionário")
-                        
-                        if status != 'em uso' and funcionario_cpf != 'nan' and funcionario_cpf:
-                            status = 'em uso'
-
-                        if funcionario_cpf and funcionario_cpf != 'nan':
-                            funcionario = FuncionarioModel.find_by_cpf(funcionario_cpf)
-                            if funcionario:
-                                funcionario_id = funcionario.id
-
-                    if (operacao == 'ALTERAR'):
-                        # Verificação da existencia do registro
-                        apar = AparelhoModel.find_by_imei(imei)
-                        if not apar:
-                            raise RuntimeError(f"Aparelho com IMEI {imei} não existente")
-
-                        if (funcionario_cpf != 'nan' and funcionario_cpf):
-                            funcionario = FuncionarioModel.find_by_cpf(funcionario_cpf)
-                            if funcionario:
-                                funcionario_id = funcionario.id
-
-                    if (operacao == 'ALTERAR' or operacao == 'CRIAR'):
                         aparelho = AparelhoModel(
                             imei,
                             imei_2,
@@ -98,7 +84,23 @@ class AparelhoParser:
                             funcionario_id
                         )
                         aparelho.upsert()
-                    
+
+                    if (operacao == 'ALTERAR'):
+                        # Verificação da existencia do registro
+                        apar = AparelhoModel.find_by_imei(imei)
+                        if not apar:
+                            raise RuntimeError(f"Aparelho com IMEI {imei} não existente")
+                        apar.imei = imei
+                        apar.imei_2 = imei_2
+                        apar.fabricante = fabricante
+                        apar.marca = marca
+                        apar.modelo = modelo
+                        apar.numero_serie = numero_serie
+                        apar.acessorios = acessorios
+                        apar.status = status
+                        apar.funcionario_id = funcionario_id
+                        apar.upsert()
+
                     if (operacao == 'DELETAR'):
                         aparelho = AparelhoModel.find_by_imei(imei)
                         if aparelho:
