@@ -32,7 +32,7 @@ class AparelhoModel(db.Model):
         self.marca = marca
         self.modelo = modelo
         self.numero_serie = numero_serie
-        self.acessorios
+        self.acessorios = acessorios
         self.status = status
         self.funcionario_id = funcionario_id
         # self.linha = self.linha.to_json()
