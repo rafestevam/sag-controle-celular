@@ -15,6 +15,7 @@ class LinhaParser:
                 'numero',
                 'classificacao',
                 'status',
+                'funcionario_cpf',
                 'aparelho_imei'
             ]
             csv_data = pd.read_csv(file_path, names=col_names, header=None)
@@ -54,38 +55,24 @@ class LinhaParser:
                     if((aparelho_imei and aparelho_imei != 'nan') and (funcionario_cpf and funcionario_cpf != 'nan')):
                         raise RuntimeError(f"A linha {numero} não pode estar atribuída a um funcionario e a um aparelho ao mesmo tempo")
 
-                    if(status != 'em uso' and aparelho_imei):
-                        status = 'em uso'
+                    if((aparelho_imei and aparelho_imei != 'nan') or (funcionario_cpf and funcionario_cpf != 'nan')):
+                        if(status != 'em uso'):
+                            status = 'em uso'
+
+                    if(aparelho_imei and aparelho_imei != 'nan'):
+                        aparelho = AparelhoModel.find_by_imei(aparelho_imei)
+                        if aparelho:
+                            aparelho_id = aparelho.id
+
+                    if(funcionario_cpf and funcionario_cpf != 'nan'):
+                        func = FuncionarioModel.find_by_cpf(funcionario_cpf)
+                        if func:
+                            funcionario_id = func.id
 
                     if(operacao == 'CRIAR'):
                         ln = LinhaModel.find_by_numero(numero)
                         if ln:
                             raise RuntimeError(f"Linha {numero} já existente")
-
-                        aparelho = AparelhoModel.find_by_imei(aparelho_imei)
-                        if aparelho:
-                            aparelho_id = aparelho.id
-
-                        func = FuncionarioModel.find_by_cpf(funcionario_cpf)
-                        if funcionario:
-                            funcionario_id = func.id
-                    
-                    if(operacao == 'ALTERAR'):
-                        ln = LinhaModel.find_by_numero(numero)
-                        if not ln:
-                            raise RuntimeError(f"Linha {numero} não existente")
-
-                        if(aparelho_imei and aparelho_imei != 'nan'):
-                            aparelho = AparelhoModel.find_by_imei(aparelho_imei)
-                            if aparelho:
-                                aparelho_id = aparelho.id
-
-                        if(funcionario_cpf and funcionario_cpf != 'nan'):
-                            func = FuncionarioModel.find_by_cpf(funcionario_cpf)
-                            if func:
-                                funcionario_id = func.id
-
-                    if(operacao == 'CRIAR' or operacao == 'ALTERAR'):
                         linha = LinhaModel(
                             ddd,
                             numero,
@@ -95,6 +82,18 @@ class LinhaParser:
                             aparelho_id
                         )
                         linha.upsert()
+
+                    if(operacao == 'ALTERAR'):
+                        ln = LinhaModel.find_by_numero(numero)
+                        if not ln:
+                            raise RuntimeError(f"Linha {numero} não existente")
+                        ln.ddd = ddd
+                        ln.numero = numero
+                        ln.classificacao = classificacao
+                        ln.status = status
+                        ln.funcionario_id = funcionario_id
+                        ln.aparelho_id = aparelho_id
+                        ln.upsert()
 
                     if(operacao == 'DELETAR'):
                         line = LinhaModel.find_by_numero(numero)
