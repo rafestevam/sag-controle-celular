@@ -28,6 +28,10 @@ class AparelhoResource(Resource):
         type=str,
         required=False,
     )
+    data_parser.add_argument("acessorios",
+        type=str,
+        required=False
+    ),
     data_parser.add_argument("status",
         type=str,
         required=True,
@@ -68,6 +72,7 @@ class AparelhoResource(Resource):
             aparelho.marca = data["marca"]
             aparelho.modelo = data["modelo"]
             aparelho.numero_serie = data["numero_serie"]
+            aparelho.acessorios = data["acessorios"]
             aparelho.status = data["status"]
             if data["funcionario_id"]:
                 aparelho.funcionario_id = data["funcionario_id"]
@@ -119,6 +124,11 @@ class AparelhoListResource(Resource):
         help="Este campo não deve estar vazio"
     )
     data_parser.add_argument("numero_serie",
+        type=str,
+        required=True,
+        help="Este campo não deve estar vazio"
+    )
+    data_parser.add_argument("acessorios",
         type=str,
         required=True,
         help="Este campo não deve estar vazio"

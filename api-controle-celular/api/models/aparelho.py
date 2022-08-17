@@ -13,6 +13,7 @@ class AparelhoModel(db.Model):
     marca = db.Column(db.String)
     modelo = db.Column(db.String)
     numero_serie = db.Column(db.String)
+    acessorios = db.Column(db.String)
     status = db.Column(db.String)
 
     # Relacionamento 1:N - Funcionarios -> Aparelhos
@@ -23,7 +24,7 @@ class AparelhoModel(db.Model):
     linha = db.relationship("LinhaModel", uselist=False, backref="aparelhos")
     # linha_id = db.Column(db.String, db.ForeignKey("linhas.id"))
 
-    def __init__(self, imei, imei_2, fabricante, marca, modelo, numero_serie, status, funcionario_id):
+    def __init__(self, imei, imei_2, fabricante, marca, modelo, numero_serie, acessorios, status, funcionario_id):
         self.id = str(uuid.uuid4())
         self.imei = imei
         self.imei_2 = imei_2
@@ -31,6 +32,7 @@ class AparelhoModel(db.Model):
         self.marca = marca
         self.modelo = modelo
         self.numero_serie = numero_serie
+        self.acessorios
         self.status = status
         self.funcionario_id = funcionario_id
         # self.linha = self.linha.to_json()
@@ -48,6 +50,7 @@ class AparelhoModel(db.Model):
             "marca": self.marca,
             "modelo": self.modelo,
             "numero_serie": self.numero_serie,
+            "acessorios": self.acessorios,
             "status": self.status,
             "funcionario_id": self.funcionario_id,
             "linha": linha
