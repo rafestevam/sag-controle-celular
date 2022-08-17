@@ -59,7 +59,7 @@ class AparelhoParser:
                         status = 'em uso'
 
                     funcionario_id = ''
-                    if funcionario_cpf:
+                    if funcionario_cpf != 'nan':
                         funcionario = FuncionarioModel.find_by_cpf(funcionario_cpf)
                         if funcionario:
                             funcionario_id = funcionario.id
