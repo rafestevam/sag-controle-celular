@@ -15,11 +15,11 @@ class LinhaResource(Resource):
         required=True,
         help="Este campo não pode estar vazio"
     )
-    # data_parser.add_argument("funcionario_id",
-    #     type=str,
-    #     # required=True,
-    #     # help="Este campo não pode estar vazio"
-    # )
+    data_parser.add_argument("funcionario_id",
+        type=str,
+        required=False,
+        # help="Este campo não pode estar vazio"
+    )
     data_parser.add_argument("aparelho_id",
         type=str
     )
@@ -44,7 +44,7 @@ class LinhaResource(Resource):
             
             linha.classificacao = data["classificacao"]
             linha.status = data["status"]
-            # linha.funcionario_id = data["funcionario_id"]
+            linha.funcionario_id = data["funcionario_id"]
 
             if (linha.aparelho_id == None or linha.aparelho_id != data["aparelho_id"]):
                 linha_vinc = LinhaModel.find_by_aparelho(data["aparelho_id"])
@@ -95,13 +95,14 @@ class LinhaListResource(Resource):
         required=True,
         help="Este campo não pode estar vazio"
     )
-    # data_parser.add_argument("funcionario_id",
-    #     type=str,
-    #     required=False,
-    #     # help="Este campo não pode estar vazio"
-    # )
+    data_parser.add_argument("funcionario_id",
+        type=str,
+        required=False,
+        # help="Este campo não pode estar vazio"
+    )
     data_parser.add_argument("aparelho_id",
-        type=str
+        type=str,
+        required=False,
     )
 
     # @cross_origin()
@@ -113,13 +114,13 @@ class LinhaListResource(Resource):
             if linha:
                 return {"message": f"Linha {numero} já existente"}, 400
 
-            # funcionario = data["funcionario_id"]
+            funcionario = data["funcionario_id"]
             # if status == "em uso" and not funcionario:
             #     return {"message": "Para status 'Em Uso', a linha deve estar atribuída a um funcionário"}, 400
             status = data["status"]
             aparelho_id = data["aparelho_id"]
-            if status == "em uso" and not aparelho_id:
-                return {"message": "Para status 'em uso', a linha deve estar atribuída a um aparelho"}, 400
+            if (status == "em uso") and not (aparelho_id or funcionario_id):
+                return {"message": "Para status 'em uso', a linha deve estar atribuída a um aparelho ou a um funcionário"}, 400
 
             linha = LinhaModel.find_by_aparelho(aparelho_id)
             if linha:
