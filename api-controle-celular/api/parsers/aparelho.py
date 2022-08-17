@@ -55,7 +55,7 @@ class AparelhoParser:
                     if status == 'em uso' and not funcionario_cpf:
                         raise RuntimeError(f"Para o Aparelho com IMEI {imei}, com status 'Em Uso', o aparelho deve estar atribuído a um funcionário")
                     
-                    if status != 'em uso' and funcionario_cpf:
+                    if status != 'em uso' and funcionario_cpf != 'nan' and funcionario_cpf:
                         status = 'em uso'
 
                     funcionario_id = ''
