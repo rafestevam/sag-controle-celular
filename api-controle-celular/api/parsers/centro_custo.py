@@ -34,16 +34,16 @@ class CentroCustoParser:
                         cc = CentroCustoModel.find_by_cc_cod(cc_cod)
                         if cc:
                             raise RuntimeError(f"Centro de Custo {cc_cod} já existente.")
+                        centro_custo = CentroCustoModel(cc_cod, cc_nome)
+                        centro_custo.upsert()
 
                     if(operacao == 'ALTERAR'):
                         # Verificação de existencia do registro
                         cc = CentroCustoModel.find_by_cc_cod(cc_cod)
                         if not cc:
                             raise RuntimeError(f"Centro de Custo {cc_cod} não existente.")
-
-                    if(opreacao == 'CRIAR' or operacao == 'ALTERAR'):
-                        centro_custo = CentroCustoModel(cc_cod, cc_nome)
-                        centro_custo.upsert()
+                        cc.cc_nome = nome
+                        cc.upsert()
 
                     if(operacao == 'DELETAR'):
                         centro_custo = CentroCustoModel.find_by_cc_cod(cc_cod)
