@@ -48,6 +48,12 @@ class LinhaParser:
                     if not (operacao == 'CRIAR' or operacao == 'ALTERAR' or operacao == 'DELETAR'):
                         raise RuntimeError("As operações esperadas são 'CRIAR', 'ALTERAR' ou 'DELETAR'")
 
+                    if(status == 'em uso' and not (aparelho_imei or funcionario_cpf)):
+                        raise RuntimeError(f"Para a linha {numero} com status 'em uso', a linha deve estar atribuída a um aparelho ou a um funcionário")
+
+                    if((aparelho_imei and aparelho_imei != 'nan') and (funcionario_cpf and funcionario_cpf =! 'nan')):
+                        raise RuntimeError(f"A linha {numero} não pode estar ligada a um funcionario e a um aparelho ao mesmo tempo")
+
                     if(status != 'em uso' and aparelho_imei):
                         status = 'em uso'
 
@@ -55,9 +61,6 @@ class LinhaParser:
                         ln = LinhaModel.find_by_numero(numero)
                         if ln:
                             raise RuntimeError(f"Linha {numero} já existente")
-
-                        if(status == 'em uso' and not (aparelho_imei or funcionario_cpf)):
-                            raise RuntimeError(f"Para a linha {numero} com status 'em uso', a linha deve estar atribuída a um aparelho ou a um funcionário")
 
                         aparelho = AparelhoModel.find_by_imei(aparelho_imei)
                         if aparelho:
@@ -72,9 +75,6 @@ class LinhaParser:
                         if not ln:
                             raise RuntimeError(f"Linha {numero} não existente")
 
-                        if(status == 'em uso' and not (aparelho_imei or funcionario_cpf)):
-                            raise RuntimeError(f"Para a linha {numero} com status 'em uso', a linha deve estar atribuída a um aparelho ou a um funcionario")
-                    
                         if(aparelho_imei and aparelho_imei != 'nan'):
                             aparelho = AparelhoModel.find_by_imei(aparelho_imei)
                             if aparelho:
