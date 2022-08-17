@@ -26,6 +26,9 @@ from resources.bulk_aparelho import BulkAparelho
 from resources.bulk_linha import BulkLinha
 from resources.bulk_funcionario import BulkFuncionario
 
+# Importação do Resource para composição do Termo de Responsabilidade
+from resources.compose_documento import DocumentResource
+
 app = Flask(__name__) # Inicializando API
 CORS(app)
 
@@ -59,6 +62,7 @@ api.add_resource(BulkCentroCusto, '/bulk/cc')
 api.add_resource(BulkAparelho, '/bulk/aparelhos')
 api.add_resource(BulkLinha, '/bulk/linhas')
 api.add_resource(BulkFuncionario, '/bulk/funcionarios')
+api.add_resource(DocumentResource, '/compose/<string:id>')
 
 # Inicialização da app Python
 if __name__ == '__main__':
