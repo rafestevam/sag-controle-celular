@@ -29,3 +29,7 @@ SESSION_TYPE = "filesystem"  # Specifies the token cache should be stored in ser
 
 # Configurations for upload bulk CSV files
 UPLOAD_FOLDER = 'static/files'
+
+# Configurarions for upload Termo de Responsabilidades
+UPLOAD_DOCS = 'static/documents'
+IMG_LOCATION = 'static/images'
