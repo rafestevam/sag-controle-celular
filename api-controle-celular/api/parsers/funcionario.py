@@ -63,32 +63,18 @@ class FuncionarioParser:
                     if not rex.match(data_nascimento):
                         raise RuntimeError(f"Funcionario com o CPF {cpf} - Campo 'data_nascimento' deve estar no formato YYYY-MM-DD")
 
-                    if(operacao == 'CRIAR'):
-                        employee = FuncionarioModel.find_by_cpf(cpf)
-                        if employee:
-                            raise RuntimeError(f"Funcionario com o CPF {cpf} já existente")
+                    if not centro_custo_cod:
+                        raise RuntimeError(f"Funcionario com o CPF {cpf} deve pertencer a um centro de custo")
 
-                        if not centro_custo_cod:
-                            raise RuntimeError(f"Funcionario com o CPF {cpf} deve pertencer a um centro de custo")
-
+                    if centro_custo_cod and centro_custo_cod != 'nan':
                         cc = CentroCustoModel.find_by_cc_cod(centro_custo_cod)
                         if cc:
                             centros_custo_id = cc.id
 
-                    if(operacao == 'ALTERAR'):
+                    if(operacao == 'CRIAR'):
                         employee = FuncionarioModel.find_by_cpf(cpf)
-                        if not employee:
-                            raise RuntimeError(f"Funcionario com o CPF {cpf} não existente")
-
-                        if not centro_custo_cod:
-                            raise RuntimeError(f"Funcionario com o CPF {cpf} deve pertencer a um centro de custo")
-
-                        if centro_custo_cod and centro_custo_cod != 'nan':
-                            cc = CentroCustoModel.find_by_cc_cod(centro_custo_cod)
-                            if cc:
-                                centros_custo_id = cc.id
-
-                    if(operacao == 'CRIAR' or operacao == 'ALTERAR'):
+                        if employee:
+                            raise RuntimeError(f"Funcionario com o CPF {cpf} já existente")
                         funcionario = FuncionarioModel(
                             nome,
                             sobrenome,
@@ -101,6 +87,21 @@ class FuncionarioParser:
                             centros_custo_id
                         )
                         funcionario.upsert()
+
+                    if(operacao == 'ALTERAR'):
+                        employee = FuncionarioModel.find_by_cpf(cpf)
+                        if not employee:
+                            raise RuntimeError(f"Funcionario com o CPF {cpf} não existente")
+                        employee.nome = nome
+                        employee.sobrenome = sobrenome
+                        employee.nome_social = nome_social
+                        employee.admissao = admissao
+                        employee.data_nascimento = data_nascimento
+                        employee.cargo = cargo
+                        employee.rg = rg
+                        employee.cpf = cpf
+                        employee.centros_custo_id = centros_custo_id
+                        employee.upsert()
 
                     if(operacao == 'DELETAR'):
                         func = FuncionarioModel.find_by_cpf(cpf)
