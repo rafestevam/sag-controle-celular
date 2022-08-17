@@ -14,7 +14,8 @@ class AparelhoParser:
                 'fabricante', 
                 'marca', 
                 'modelo', 
-                'numero_serie', 
+                'numero_serie',
+                'acessorios',
                 'status', 
                 'funcionario_cpf'
             ]
@@ -30,9 +31,10 @@ class AparelhoParser:
                        row['marca'] != 'marca' or
                        row['modelo'] != 'modelo' or
                        row['numero_serie'] != 'numero_serie' or
+                       row['acessorios'] != 'acessorios' or
                        row['status'] != 'status' or
                        row['funcionario_cpf'] != 'funcionario_cpf'):
-                        raise RuntimeError("As colunas esperadas para o arquivo são 'imei', 'imei_2', 'fabricante', 'marca', 'modelo', 'numero_serie', 'status' e 'funcionario_cpf'")
+                        raise RuntimeError("As colunas esperadas para o arquivo são 'imei', 'imei_2', 'fabricante', 'marca', 'modelo', 'numero_serie', 'acessorios', 'status' e 'funcionario_cpf'")
                 else:
                     imei = str(row['imei']).strip()
                     imei_2 = str(row['imei_2']).strip()
@@ -40,6 +42,7 @@ class AparelhoParser:
                     marca = str(row['marca']).strip()
                     modelo = str(row['modelo']).strip()
                     numero_serie = str(row['numero_serie']).strip()
+                    acessorios = str(row['acessorios']).strip()
                     status = str(row['status']).strip()
                     funcionario_cpf = str(row['funcionario_cpf']).strip()
 
@@ -68,6 +71,7 @@ class AparelhoParser:
                         marca,
                         modelo,
                         numero_serie,
+                        acessorios,
                         status,
                         funcionario_id
                     )
