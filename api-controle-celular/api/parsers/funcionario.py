@@ -1,5 +1,6 @@
 import pandas as pd
 from models.funcionario import FuncionarioModel
+from models.centro_custo import CentroCustoModel
 import sys, re
 
 class FuncionarioParser:
@@ -16,7 +17,7 @@ class FuncionarioParser:
                 'cargo',
                 'rg',
                 'cpf',
-                'centros_custo_id'
+                'centro_custo_cod'
             ]
             csv_data = pd.read_csv(file_path, names=col_names, header=None)
             rex = re.compile("\\d{4}-\\d{2}-\\d{2}")
@@ -33,8 +34,8 @@ class FuncionarioParser:
                        row['cargo'] != 'cargo' or
                        row['rg'] != 'rg' or
                        row['cpf'] != 'cpf' or
-                       row['centros_custo_id'] != 'centros_custo_id'):
-                        raise RuntimeError("As colunas esperadas para o arquivo são 'nome', 'sobrenome', 'nome_social', 'admissao', 'data_nascimento', 'cargo', 'rg', 'cpf' e 'centros_custo_id'")
+                       row['centro_custo_cod'] != 'centro_custo_cod'):
+                        raise RuntimeError("As colunas esperadas para o arquivo são 'nome', 'sobrenome', 'nome_social', 'admissao', 'data_nascimento', 'cargo', 'rg', 'cpf' e 'centro_custo_cod'")
                 else:
                     nome = str(row['nome']).strip()
                     sobrenome = str(row['sobrenome']).strip()
@@ -44,7 +45,7 @@ class FuncionarioParser:
                     cargo = str(row['cargo']).strip()
                     rg = str(row['rg']).strip()
                     cpf = str(row['cpf']).strip()
-                    centros_custo_id = str(row['centros_custo_id']).strip()
+                    centro_custo_cod = str(row['centro_custo_cod']).strip()
 
                     if not rex.match(admissao):
                         raise RuntimeError(f"Funcionario com o CPF {cpf} - Campo 'admissao' deve estar no formato YYYY-MM-DD")
@@ -56,8 +57,13 @@ class FuncionarioParser:
                     if employee:
                         raise RuntimeError(f"Funcionario com o CPF {cpf} já existente")
 
-                    if not centros_custo_id:
+                    if not centro_custo_cod:
                         raise RuntimeError(f"Funcionario com o CPF {cpf} deve pertencer a um centro de custo")
+
+                    centros_custo_id = ''
+                    cc = CentroCustoModel.find_by_cc_cod(centro_custo_cod)
+                    if cc:
+                        centros_custo_id = cc.id
 
                     funcionario = FuncionarioModel(
                         nome,

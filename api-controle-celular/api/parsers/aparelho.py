@@ -1,5 +1,6 @@
 import pandas as pd
 from models.aparelho import AparelhoModel
+from models.funcionario import FuncionarioModel
 import sys
 
 class AparelhoParser:
@@ -15,7 +16,7 @@ class AparelhoParser:
                 'modelo', 
                 'numero_serie', 
                 'status', 
-                'funcionario_id'
+                'funcionario_cpf'
             ]
             csv_data = pd.read_csv(file_path, names=col_names, header=None)
 
@@ -30,8 +31,8 @@ class AparelhoParser:
                        row['modelo'] != 'modelo' or
                        row['numero_serie'] != 'numero_serie' or
                        row['status'] != 'status' or
-                       row['funcionario_id'] != 'funcionario_id'):
-                        raise RuntimeError("As colunas esperadas para o arquivo são 'imei', 'imei_2', 'fabricante', 'marca', 'modelo', 'numero_serie', 'status' e 'funcionario_id'")
+                       row['funcionario_cpf'] != 'funcionario_cpf'):
+                        raise RuntimeError("As colunas esperadas para o arquivo são 'imei', 'imei_2', 'fabricante', 'marca', 'modelo', 'numero_serie', 'status' e 'funcionario_cpf'")
                 else:
                     imei = str(row['imei']).strip()
                     imei_2 = str(row['imei_2']).strip()
@@ -40,7 +41,7 @@ class AparelhoParser:
                     modelo = str(row['modelo']).strip()
                     numero_serie = str(row['numero_serie']).strip()
                     status = str(row['status']).strip()
-                    funcionario_id = str(row['funcionario_id']).strip()
+                    funcionario_cpf = str(row['funcionario_cpf']).strip()
 
                     # Validação de duplicidade de registros
                     apar = AparelhoModel.find_by_imei(imei)
@@ -48,8 +49,17 @@ class AparelhoParser:
                         raise RuntimeError(f"Aparelho com IMEI {imei} já cadastrado")
 
                     # Validação de status e vinculação com funcionario
-                    if status == 'em uso' and not funcionario_id:
+                    if status == 'em uso' and not funcionario_cpf:
                         raise RuntimeError(f"Para o Aparelho com IMEI {imei}, com status 'Em Uso', o aparelho deve estar atribuído a um funcionário")
+                    
+                    if status != 'em uso' and funcionario_cpf:
+                        status = 'em uso'
+
+                    funcionario_id = ''
+                    if funcionario_cpf:
+                        funcionario = FuncionarioModel.find_by_cpf(funcionario_cpf)
+                        if funcionario:
+                            funcionario_id = funcionario.id
 
                     aparelho = AparelhoModel(
                         imei,

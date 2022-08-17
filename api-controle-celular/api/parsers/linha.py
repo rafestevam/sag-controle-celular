@@ -1,5 +1,6 @@
 import pandas as pd
 from models.linha import LinhaModel
+from models.aparelho import AparelhoModel
 import sys
 
 class LinhaParser:
@@ -12,7 +13,7 @@ class LinhaParser:
                 'numero',
                 'classificacao',
                 'status',
-                'aparelho_id'
+                'aparelho_imei'
             ]
             csv_data = pd.read_csv(file_path, names=col_names, header=None)
 
@@ -24,21 +25,29 @@ class LinhaParser:
                        row['numero'] != 'numero' or
                        row['classificacao'] != 'classificacao' or
                        row['status'] != 'status' or
-                       row['aparelho_id'] != 'aparelho_id'):
-                        raise RuntimeError("As colunas esperadas para o arquivo são 'ddd', 'numero', 'classificacao', 'status' e 'aparelho_id'")
+                       row['aparelho_imei'] != 'aparelho_imei'):
+                        raise RuntimeError("As colunas esperadas para o arquivo são 'ddd', 'numero', 'classificacao', 'status' e 'aparelho_imei'")
                 else:
                     ddd = str(row['ddd']).strip()
                     numero = str(row['numero']).strip()
                     classificacao = str(row['classificacao']).strip()
                     status = str(row['status']).strip()
-                    aparelho_id = str(row['aparelho_id']).strip()
+                    aparelho_imei = str(row['aparelho_imei']).strip()
 
                     ln = LinhaModel.find_by_numero(numero)
                     if ln:
                         raise RuntimeError(f"Linha {numero} já existente")
 
-                    if(status == 'em uso' and not aparelho_id):
+                    if(status == 'em uso' and not aparelho_imei):
                         raise RuntimeError(f"Para a linha {numero} com status 'em uso', a linha deve estar atribuída a um aparelho")
+
+                    if(status != 'em uso' and aparelho_imei):
+                        status = 'em uso'
+
+                    aparelho_id = ''
+                    aparelho = AparelhoModel.find_by_imei(aparelho_imei)
+                    if aparelho:
+                        aparelho_id = aparelho.id
 
                     linha = LinhaModel(
                         ddd,
