@@ -20,7 +20,9 @@ class LinhaModel(db.Model):
     aparelho_id = db.Column(db.String, db.ForeignKey("aparelhos.id"))
     # aparelho = db.relationship("AparelhoModel", uselist=False, backref="linhas")
 
-    def __init__(self, ddd, numero, classificacao, status, funcionario_id, aparelho_id):
+    last_funcionario_id = db.Column(db.String)
+
+    def __init__(self, ddd, numero, classificacao, status, funcionario_id, aparelho_id, last_funcionario_id):
         self.id = str(uuid.uuid4())
         self.ddd = ddd
         self.numero = numero
@@ -28,6 +30,7 @@ class LinhaModel(db.Model):
         self.status = status
         self.funcionario_id = funcionario_id
         self.aparelho_id = aparelho_id
+        self.last_funcionario_id = last_funcionario_id
 
     def to_json(self):
         return {
@@ -37,7 +40,8 @@ class LinhaModel(db.Model):
             "classificacao": self.classificacao,
             "status": self.status,
             "funcionario_id": self.funcionario_id,
-            "aparelho_id": self.aparelho_id
+            "aparelho_id": self.aparelho_id,
+            "last_funcionario_id": self.last_funcionario_id
             # "aparelho": [aparelho.to_json() for aparelho in self.aparelho.all()]
         }
 

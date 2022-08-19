@@ -41,7 +41,8 @@ class LinhaResource(Resource):
             linha = LinhaModel.find_by_id(id)
             if not linha:
                 return {"message": "Linha não encontrada"}, 400
-            
+
+            linha.last_funcionario_id = linha.funcionario_id
             linha.classificacao = data["classificacao"]
             linha.status = data["status"]
             linha.funcionario_id = data["funcionario_id"]
@@ -106,6 +107,10 @@ class LinhaListResource(Resource):
     data_parser.add_argument("aparelho_id",
         type=str,
         required=False,
+    )
+    data_parser.add_argument("last_funcionario_id",
+        type=str,
+        default='',
     )
 
     # @cross_origin()
