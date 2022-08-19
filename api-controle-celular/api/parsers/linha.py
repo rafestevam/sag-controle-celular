@@ -71,6 +71,7 @@ class LinhaParser:
 
                     if(operacao == 'CRIAR'):
                         ln = LinhaModel.find_by_numero(numero)
+                        last_funcionario_id = ''
                         if ln:
                             raise RuntimeError(f"Linha {numero} já existente")
                         linha = LinhaModel(
@@ -79,7 +80,8 @@ class LinhaParser:
                             classificacao,
                             status,
                             funcionario_id,
-                            aparelho_id
+                            aparelho_id,
+                            last_funcionario_id
                         )
                         linha.upsert()
 
@@ -91,6 +93,7 @@ class LinhaParser:
                         ln.numero = numero
                         ln.classificacao = classificacao
                         ln.status = status
+                        ln.last_funcionario_id = ln.funcionario_id
                         ln.funcionario_id = funcionario_id
                         ln.aparelho_id = aparelho_id
                         ln.upsert()
