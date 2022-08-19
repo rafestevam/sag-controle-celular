@@ -117,7 +117,7 @@ class LinhaListResource(Resource):
             if linha:
                 return {"message": f"Linha {numero} já existente"}, 400
 
-            funcionario = data["funcionario_id"]
+            funcionario_id = data["funcionario_id"]
             # if status == "em uso" and not funcionario:
             #     return {"message": "Para status 'Em Uso', a linha deve estar atribuída a um funcionário"}, 400
             status = data["status"]
@@ -128,9 +128,10 @@ class LinhaListResource(Resource):
             if(aparelho_id and funcionario_id):
                 return {"message": "A linha não pode estar atribuída a um aparelho e a um funcionário ao mesmo tempo"}, 400
 
-            linha = LinhaModel.find_by_aparelho(aparelho_id)
-            if linha:
-                return {"message": "Esta linha já está vinculada a um aparelho"}, 400
+            if(aparelho_id):
+                linha = LinhaModel.find_by_aparelho(aparelho_id)
+                if linha:
+                    return {"message": "Esta linha já está vinculada a um aparelho"}, 400
 
             linha = LinhaModel(**data)
 
