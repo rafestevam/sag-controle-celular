@@ -1,6 +1,7 @@
 from flask_restful import Resource, reqparse
 from flask_cors import cross_origin
 from models.aparelho import AparelhoModel
+from models.linha import LinhaModel
 
 class AparelhoResource(Resource):
     data_parser = reqparse.RequestParser()
@@ -74,10 +75,16 @@ class AparelhoResource(Resource):
             aparelho.numero_serie = data["numero_serie"]
             aparelho.acessorios = data["acessorios"]
             aparelho.status = data["status"]
+            last_funcionario_id = aparelho.funcionario_id
             if data["funcionario_id"]:
                 aparelho.funcionario_id = data["funcionario_id"]
             # if data["linha_id"]:
             # aparelho.linha_id = data["linha_id"]
+            if (aparelho.linha and (data["funcionario_id"] != last_funcionario_id)):
+                linha = LinhaModel.find_by_id(aparelho.linha.id)
+                linha.last_funcionario_id = last_funcionario_id
+                # linha.funcionario.id = data["funcionario_id"]
+                linha.upsert()
             
             aparelho.upsert()
             return aparelho.to_json(), 200

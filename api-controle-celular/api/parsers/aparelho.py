@@ -1,6 +1,7 @@
 import pandas as pd
 from models.aparelho import AparelhoModel
 from models.funcionario import FuncionarioModel
+from models.linha import LinhaModel
 import sys
 
 class AparelhoParser:
@@ -90,6 +91,7 @@ class AparelhoParser:
                         apar = AparelhoModel.find_by_imei(imei)
                         if not apar:
                             raise RuntimeError(f"Aparelho com IMEI {imei} não existente")
+                        last_funcionario_id = apar.funcionario_id
                         apar.imei = imei
                         apar.imei_2 = imei_2
                         apar.fabricante = fabricante
@@ -99,6 +101,12 @@ class AparelhoParser:
                         apar.acessorios = acessorios
                         apar.status = status
                         apar.funcionario_id = funcionario_id
+
+                        if(apar.linha and (funcionario_id != last_funcionario_id)):
+                            linha = LinhaModel.find_by_id(apar.linha.id)
+                            linha.last_funcionario_id = last_funcionario_id
+                            linha.upsert()
+
                         apar.upsert()
 
                     if (operacao == 'DELETAR'):
