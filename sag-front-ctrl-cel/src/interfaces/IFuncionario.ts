@@ -12,6 +12,7 @@ export default interface IFuncionario {
     cargo: string,
     rg: string,
     cpf: string,
+    centro_custo_id: string,
     centro_custo: ICentroCusto,
     aparelhos: IAparelho[],
     linhas: ILinha[],

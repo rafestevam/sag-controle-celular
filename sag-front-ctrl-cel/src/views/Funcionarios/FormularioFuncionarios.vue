@@ -9,6 +9,8 @@
         :validation-schema="funcionarioSchema"
         v-slot="{ errors }"
       >
+        <!-- <div>{{ selectedCostCenter }}</div> -->
+        <!-- <div>{{ funcionario.centro_custo_id }}</div> -->
         <!-- Nome/Sobrenome -->
         <div class="field is-horizontal">
           <div class="field-label is-normal">
@@ -18,7 +20,8 @@
             <div class="field">
               <p class="control is-expanded">
                 <!-- <input type="text" class="input" placeholder="Nome" /> -->
-                <Field v-model="funcionario.nome"
+                <Field
+                  v-model="funcionario.nome"
                   name="iNome"
                   class="input"
                   as="input"
@@ -31,7 +34,8 @@
             <div class="field">
               <p class="control is-expanded">
                 <!-- <input type="text" class="input" placeholder="Sobrenome" /> -->
-                <Field v-model="funcionario.sobrenome"
+                <Field
+                  v-model="funcionario.sobrenome"
                   name="iSobrenome"
                   class="input"
                   as="input"
@@ -53,7 +57,8 @@
             <div class="field">
               <p class="control is-expanded">
                 <!-- <input type="text" class="input" placeholder="" /> -->
-                <Field v-model="funcionario.nome_social"
+                <Field
+                  v-model="funcionario.nome_social"
                   name="iNomeCracha"
                   class="input"
                   as="input"
@@ -73,8 +78,8 @@
           <div class="field-body">
             <div class="field is-narrow">
               <p class="control is-expanded">
-                <!-- <input type="date" class="input" placeholder="" /> -->
-                <Field v-model="funcionario.admissao"
+                <Field
+                  v-model="funcionario.admissao"
                   name="iAdmissao"
                   class="input"
                   type="date"
@@ -94,8 +99,8 @@
           <div class="field-body">
             <div class="field is-narrow">
               <p class="control is-expanded">
-                <!-- <input type="date" class="input" placeholder="" /> -->
-                <Field v-model="funcionario.data_nascimento"
+                <Field
+                  v-model="funcionario.data_nascimento"
                   name="iNascimento"
                   class="input"
                   type="date"
@@ -115,8 +120,8 @@
           <div class="field-body">
             <div class="field">
               <p class="control is-expanded">
-                <!-- <input type="text" v-maska="'##.###.###-#'" class="input" placeholder="RG" /> -->
-                <Field v-model="funcionario.rg"
+                <Field
+                  v-model="funcionario.rg"
                   name="iRG"
                   class="input"
                   as="input"
@@ -130,8 +135,8 @@
             </div>
             <div class="field">
               <p class="control is-expanded">
-                <!-- <input type="text" v-maska="'###.###.###-##'" class="input" placeholder="CPF" /> -->
-                <Field v-model="funcionario.cpf"
+                <Field
+                  v-model="funcionario.cpf"
                   name="iCPF"
                   class="input"
                   as="input"
@@ -154,8 +159,8 @@
           <div class="field-body">
             <div class="field">
               <p class="control is-expanded">
-                <!-- <input type="text" class="input" placeholder="" /> -->
-                <Field v-model="funcionario.cargo"
+                <Field
+                  v-model="funcionario.cargo"
                   name="iCargo"
                   class="input"
                   as="input"
@@ -176,15 +181,21 @@
             <div class="field is-narrow">
               <div class="control">
                 <div class="select is-fullwidth">
-                  <Field v-model="funcionario.centro_custo"
+                  <!-- <Field
+                    v-model="selectedCostCenter"
+                    name="iCentroCusto"
+                    as="select"
+                    class="input"
+                    :class="{ 'is-danger': errors.iCentroCusto }"
+                  > -->
+                  <Field
+                    v-model="funcionario.centro_custo_id"
                     name="iCentroCusto"
                     as="select"
                     class="input"
                     :class="{ 'is-danger': errors.iCentroCusto }"
                   >
                     <option value="" default>Selecione um CC</option>
-                    <!-- <option>123456 - Customer Support BR</option>
-                  <option>789012 - Professional Services BR</option> -->
                     <option
                       v-for="centrocusto in ccs"
                       :key="centrocusto.id"
@@ -200,131 +211,29 @@
           </div>
         </div>
 
-        <!-- Aparelho em Posse -->
-        <div
-          class="field is-horizontal"
-          v-for="(lineAssigned, index) in linesAssigned"
-          :key="index"
-        >
+        <!-- Telefones em Posse -->
+        <div class="field is-horizontal">
           <div class="field-label is-normal">
-            <label class="label">Linha Atribuída #{{ index + 1 }}</label>
+            <label class="label">Telefones em Posse</label>
           </div>
           <div class="field-body">
-            <div class="field is-grouped is-narrow">
-              <div class="control">
-                <div class="select is-fullwidth">
-                  <Field v-model="funcionario.linhas[index].id"
-                    :name="`iLinhas[${index}]`"
-                    class="input"
-                    as="select"
-                    rules="required"
-                    :class="{ 'is-danger': errors[`iLinhas[${index}]`] }"
-                  >
-                    <option value="" default>Selecione uma Linha</option>
-                    <!-- <option>(11) 91234-5678</option>
-                  <option>(61) 98765-4321</option> -->
-                    <option
-                      v-for="linha in linhas"
-                      :key="linha.id"
-                      :value="linha.id"
-                    >
-                      {{
-                        `(${linha.ddd}) ${linha.numero.substring(
-                          0,
-                          5
-                        )}-${linha.numero.substring(5, 9)}`
-                      }}
-                    </option>
-                  </Field>
-                </div>
-              </div>
-              <div class="control">
-                <button class="button is-light" @click="addLinhasAssigned">
-                  <i class="fa-solid fa-plus"></i>
-                </button>
-              </div>
-              <div class="control">
-                <button
-                  class="button is-light"
-                  @click="removeLinhasAssigned(index)"
-                >
-                  <i class="fa-solid fa-minus"></i>
-                </button>
+            <div class="field">
+              <div class="control is-expanded">
+                <table class="table">
+                  <thead>
+                    <th><abbr title="Aparelho"></abbr></th>
+                    <th><abbr title="Marca"></abbr></th>
+                    <th><abbr title="Modelo"></abbr></th>
+                    <th><abbr title="Num. Série"></abbr></th>
+                    <th><abbr title="Num. Linha"></abbr></th>
+                  </thead>
+                </table>
               </div>
             </div>
-            <div class="field is-narrow">
-              <div class="control">
-                <p class="help is-danger">{{ errors[`iLinhas[${index}]`] }}</p>
-              </div>
-            </div>
-            <!-- <div class="field">
-            <p class="control is-narrow">
-              <input type="text" class="input" value="111111111111111111111 - IPhone 7 SE" disabled/>
-            </p>
-          </div> -->
           </div>
         </div>
 
         <!-- Aparelho em Posse -->
-        <div
-          class="field is-horizontal"
-          v-for="(deviceAssigned, index) in devicesAssigned"
-          :key="index"
-        >
-          <div class="field-label is-normal">
-            <label class="label">Aparelho Atribuído #{{ index + 1 }}</label>
-          </div>
-          <div class="field-body">
-            <div class="field is-narrow is-grouped">
-              <div class="control">
-                <div class="select is-fullwidth">
-                  <Field v-model="funcionario.aparelhos[index].id"
-                    :name="`iAparelhos[${index}]`"
-                    as="select"
-                    rules="required"
-                    class="input"
-                    :class="{ 'is-danger': errors[`iAparelhos[${index}]`] }"
-                  >
-                    <option value="" default>Selecione um Aparelho</option>
-                    <!-- <option>Apple iPhone SE - 987654321</option>
-                  <option>Apple iPhone 7 - 456123789</option> -->
-                    <option
-                      v-for="aparelho in aparelhos"
-                      :key="aparelho.id"
-                      :value="aparelho.id"
-                    >
-                      {{ aparelho.marca }} {{ aparelho.modelo }} -
-                      {{ aparelho.imei }}
-                    </option>
-                  </Field>
-                </div>
-              </div>
-              <div class="control">
-                <button class="button is-light" @click="addDeviceAssigned">
-                  <i class="fa-solid fa-plus"></i>
-                </button>
-              </div>
-              <div class="control">
-                <button
-                  class="button is-light"
-                  @click="removeDeviceAssigned(index)"
-                >
-                  <i class="fa-solid fa-minus"></i>
-                </button>
-              </div>
-            </div>
-            <!-- <div class="field">
-            <p class="control is-narrow">
-              <input type="text" class="input" value="111111111111111111111 - IPhone 7 SE" disabled/>
-            </p>
-          </div> -->
-            <div class="field is-narrow">
-              <div class="control">
-                <p class="help is-danger">{{ errors[`iAparelhos[${index}]`] }}</p>
-              </div>
-            </div>
-          </div>
-        </div>
 
         <!-- Submeter Formulario -->
         <div class="field is-horizontal">
@@ -334,10 +243,10 @@
           <div class="field-body">
             <div class="field is-grouped">
               <div class="control">
-                <button class="button is-primary">Salvar</button>
+                <input type="submit" class="button is-primary" value="Salvar">
               </div>
               <div class="control">
-                <button class="button is-light">Cancelar</button>
+                <router-link to="/funcionarios" class="button is-light">Cancelar</router-link>
               </div>
             </div>
           </div>
@@ -351,13 +260,15 @@
 import { defineComponent, computed, ref } from "vue";
 import { useStore } from "@/store";
 import { GET_ALL_CC } from "@/store/modules/centrocusto/constants/action-type";
-import { GET_ALL_LINHAS } from "@/store/modules/linha/constants/action-type";
-import ILinha, { LinhaStatus } from "@/interfaces/ILinha";
-import IAparelho, { AparelhoStatus } from "@/interfaces/IAparelho";
-import { GET_ALL_APARELHOS } from "@/store/modules/aparelho/constants/action-type";
 import { Form, Field } from "vee-validate";
 import * as Yup from "yup";
 import IFuncionario from "@/interfaces/IFuncionario";
+import {
+  POST_FUNC,
+  PUT_FUNC,
+} from "@/store/modules/funcionario/constants/action-type";
+import useNotificator from "@/hooks/Notificator";
+import { NotificationType } from "@/interfaces/INotification";
 
 export default defineComponent({
   name: "FormularioFuncionariosViewComponent",
@@ -365,36 +276,34 @@ export default defineComponent({
     Form,
     Field,
   },
-  setup() {
+  props: {
+    id: {
+      type: String,
+    },
+  },
+  setup(props) {
     const store = useStore();
     store.dispatch(GET_ALL_CC);
-    store.dispatch(GET_ALL_LINHAS);
-    store.dispatch(GET_ALL_APARELHOS);
 
     const funcionario = ref({} as IFuncionario);
+    const { notify } = useNotificator();
 
-    const linesAssigned = ref([] as ILinha[]);
-    linesAssigned.value.push({} as ILinha);
+    const selectedCostCenter = ref('');
 
-    const devicesAssigned = ref([] as IAparelho[]);
-    devicesAssigned.value.push({} as IAparelho);
+    if (props.id) {
+      const employee = store.state.funcionario?.funcionarios.find(
+        (empl) => empl.id == props.id
+      );
+      funcionario.value = employee as IFuncionario;
+      selectedCostCenter.value = employee?.centro_custo_id || "";
+    }
 
     return {
       store,
+      notify,
       ccs: computed(() => store.state.centrocusto.ccs),
-      linhas: computed(() =>
-        store.state.linha.linhas?.filter(
-          (linha) => linha.status == LinhaStatus.DISPONIVEL
-        )
-      ),
-      aparelhos: computed(() =>
-        store.state.aparelho.aparelhos?.filter(
-          (device) => device.status == AparelhoStatus.DISPONIVEL
-        )
-      ),
-      linesAssigned,
-      devicesAssigned,
       funcionario,
+      selectedCostCenter,
     };
   },
   data() {
@@ -421,27 +330,50 @@ export default defineComponent({
     });
     return {
       funcionarioSchema,
+      // selectedCostCenter: '',
     };
   },
   methods: {
-    addLinhasAssigned() {
-      this.linesAssigned.push({} as ILinha);
-    },
-    removeLinhasAssigned(index: number) {
-      if (this.linesAssigned.length > 1) {
-        this.linesAssigned.splice(index, 1);
-      }
-    },
-    addDeviceAssigned() {
-      this.devicesAssigned.push({} as IAparelho);
-    },
-    removeDeviceAssigned(index: number) {
-      if (this.devicesAssigned.length > 1) {
-        this.devicesAssigned.splice(index, 1);
-      }
-    },
     saveFuncionario() {
-      console.log(JSON.stringify(this.funcionario));
+      if (this.id) {
+        //this.funcionario.centro_custo_id = this.selectedCostCenter;
+        console.log(this.funcionario);
+        this.store
+          .dispatch(PUT_FUNC, this.funcionario)
+          .then(() => {
+            this.notify(
+              NotificationType.SUCCESS,
+              `Funcionario ${this.funcionario.nome_social} alterado com sucesso!`
+            );
+            this.$router.push("/funcionarios");
+          })
+          .catch((err) =>
+            this.notify(NotificationType.DANGER, err.response.data)
+          );
+      } else {
+        //this.funcionario.centro_custo_id = this.selectedCostCenter;
+        console.log(this.funcionario);
+        this.store
+          .dispatch(POST_FUNC, this.funcionario)
+          .then(() => {
+            this.notify(
+              NotificationType.SUCCESS,
+              `Funcionario ${this.funcionario.nome_social} criado com sucesso!`
+            );
+            this.$router.push("/funcionarios");
+          })
+          .catch((err) =>
+            this.notify(NotificationType.DANGER, err.response.data)
+          );
+      }
+    },
+    selectCostCenter(){
+      console.log('Centro de Custo selecionado');
+    },
+  },
+  computed: {
+    employeeCostCenter() {
+      return this.funcionario.centro_custo?.id || "";
     },
   },
 });

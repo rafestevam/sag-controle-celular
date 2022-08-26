@@ -134,7 +134,7 @@ export default defineComponent({
             this.$router.push('/cc');
           })
           .catch(err => {
-            this.notify(NotificationType.DANGER, `${err.response.data.message}`);
+            this.notify(NotificationType.DANGER, `${err.response?.data.message}`);
           })
       }
     },
