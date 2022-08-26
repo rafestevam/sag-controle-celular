@@ -1,8 +1,8 @@
 import ICentroCusto from "@/interfaces/ICentroCusto";
 import { Module } from "vuex";
 import { AppState, store } from "@/store";
-import { DELETE_CC, GET_ALL_CC, POST_CC, PUT_CC } from "./constants/action-type";
-import { LIST_ALL_CC } from "./constants/mutation-type";
+import { DELETE_CC, GET_ALL_CC, GET_CC, POST_CC, PUT_CC } from "./constants/action-type";
+import { LIST_ALL_CC, LIST_ONE_CC } from "./constants/mutation-type";
 import http from "@/http";
 
 export interface CentroCustoState {
@@ -47,6 +47,15 @@ export const centrocusto: Module<CentroCustoState, AppState> = {
                 store.state.centrocusto.ccs = store.state.centrocusto.ccs
                     .filter(cc => cc.id != idCentroCusto);
             });
+    },
+    [GET_CC](ctx, idCentroCusto: string) {
+      return http
+        .get(`/cc/${idCentroCusto}`)
+        .then((resp) => {
+          const ccs = ctx.state.ccs;
+          ccs.push(resp.data);
+          ctx.commit(LIST_ONE_CC, resp.data)}
+        );
     }
   },
 };
