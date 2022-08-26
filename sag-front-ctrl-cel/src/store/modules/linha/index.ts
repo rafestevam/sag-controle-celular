@@ -32,7 +32,7 @@ export const linha: Module<LinhaState, AppState> = {
             return httpClient.put(`/linhas/${linha.id}`,{
                 'classificacao': linha.classificacao,
                 'status': linha.status,
-                'funcionario_id': linha.funcionario_id,
+                'funcionario_id': linha.funcionario.id,
             },{
                 headers: {
                     'Content-Type': 'application/json',

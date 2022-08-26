@@ -86,7 +86,7 @@
           <div class="field-body">
             <div class="field">
               <p class="control is-expanded">
-                <label class="input">{{ linha.funcionario_id ? linhaStatus.EM_USO : linhaStatus.DISPONIVEL }}</label>
+                <label class="input">{{ linha.funcionario?.id ? linhaStatus.EM_USO : linhaStatus.DISPONIVEL }}</label>
               </p>
             </div>
           </div>
@@ -140,7 +140,7 @@ export default defineComponent({
     const linhaSchema = Yup.object().shape({
       iTelefone: Yup.string()
         .required("O campo Número de Telefone é obrigatório")
-        .matches(/^\([1-9]{2}\) [9]{0,1}[6-9]{1}[0-9]{3}-[0-9]{4}$/, "Entrar o número de Telefone no formato (99) 99999-9999"),
+        .matches(/^\([1-9]{2}\) [9]{0,1}[0-9]{1}[0-9]{3}-[0-9]{4}$/, "Entrar o número de Telefone no formato (99) 99999-9999"),
     });
     return {
       linhaSchema,
@@ -150,7 +150,7 @@ export default defineComponent({
     saveLinha() {
       if(this.id){
         console.log('ALTERAR LINHA');
-        this.linha.status = this.linha.funcionario_id ? LinhaStatus.EM_USO : LinhaStatus.DISPONIVEL;
+        this.linha.status = this.linha.funcionario ? LinhaStatus.EM_USO : LinhaStatus.DISPONIVEL;
         this.store
           .dispatch(PUT_LINHA, this.linha)
           .then(() => {
@@ -162,11 +162,11 @@ export default defineComponent({
       } else {
         const numTel = this.numeroTelefone.replace(/[^0-9]/g, '');
         const funcionario = {} as IFuncionario;
-        funcionario.id = ""
+        // funcionario.id = ""
         this.linha.ddd = numTel.substring(0,2);
         this.linha.numero = numTel.substring(2, 11);
         this.linha.status = LinhaStatus.DISPONIVEL;
-        this.linha.funcionario_id = funcionario.id;
+        // this.linha.funcionario.id = funcionario.id;
         this.store
           .dispatch(POST_LINHA, this.linha)
           .then(() => {
