@@ -1,3 +1,4 @@
+<!-- eslint-disable vue/no-side-effects-in-computed-properties -->
 <template>
   <div>
     <h1 class="subtitle">Lista de Centros de Custo</h1>
@@ -18,6 +19,36 @@
       </router-link>
     </div>
     <div class="container is-widescreen">
+      
+      <!-- Numero de Entradas por pagina -->
+      <div class="field is-horizontal">
+        <div class="field-body">
+          <div class="field is-narrow">
+            <div class="control">
+              Mostrando
+            </div>
+          </div>
+          <div class="field is-narrow">
+            <div class="control">
+              <div class="select">
+                <select v-model="limitPerPage">
+                  <option :value="5">5</option>
+                  <option :value="10">10</option>
+                  <option :value="25">25</option>
+                  <option :value="50">50</option>
+                  <option :value="100">100</option>
+                </select>
+              </div>
+            </div>
+          </div>
+          <div class="field is-narrow">
+            <div class="control">
+              por página
+            </div>
+          </div>
+        </div>
+      </div>
+
       <table id="centros_custo" class="table is-fullwidth" v-if="centros_custo">
         <thead>
           <tr>
@@ -27,7 +58,8 @@
           </tr>
         </thead>
         <tbody>
-          <tr v-for="cc in centros_custo" :key="cc.id">
+          <!-- <tr v-for="cc in centros_custo" :key="cc.id"> -->
+          <tr v-for="cc in filteredEntries" :key="cc.id">
             <td>{{ cc.cc_cod }}</td>
             <td>{{ cc.cc_nome }}</td>
             <td>
@@ -52,16 +84,32 @@
           </tr>
         </tbody>
       </table>
+
       <BoxNotification
         message="Não há Centros de Custo cadastrados na base de dados"
-        v-else
+        v-else 
       />
+
+      <!-- Paginação da Tabela -->
+      <div class="pagination" role="pagination" aria-label="pagination">
+        <ul class="pagination-list">
+          <li><a href="#" @click.prevent="pageActive = 1" class="pagination-link">&#171;</a></li>
+          <li><a href="#" @click.prevent="pageActive = (pageActive > 1) ? pageActive - 1 : pageActive" class="pagination-link">&#8249;</a></li>
+
+          <li v-for="(page, index) in renderPagination" :key="index">
+            <a class="pagination-link" href="#" @click.prevent="pageActive = Number(page)">{{ page }}</a>
+          </li>
+
+          <li><a href="#" @click.prevent="pageActive = (pageActive < totalPages) ? pageActive + 1 : pageActive" class="pagination-link">&#8250;</a></li>
+          <li><a href="#" @click.prevent="pageActive = totalPages" class="pagination-link">&#187;</a></li>
+        </ul>
+      </div>
     </div>
   </section>
 </template>
 
 <script lang="ts">
-import { defineComponent, computed } from "vue";
+import { defineComponent, computed, ref } from "vue";
 import { useStore } from "@/store";
 import useNotificator from "@/hooks/Notificator";
 import {
@@ -71,6 +119,7 @@ import {
 import { NotificationType } from "@/interfaces/INotification";
 import BoxNotification from "@/components/BoxNotification/BoxNotification.vue";
 import ModalNotification from "@/components/ModalNotification/ModalNotification.vue";
+import { array as arr } from 'alga-js';
 
 export default defineComponent({
   name: "ListaCCViewComponent",
@@ -92,10 +141,34 @@ export default defineComponent({
     const { notify } = useNotificator();
     store.dispatch(GET_ALL_CC);
 
+    // Variaveis para Num de Entradas e Paginação da Tabela
+    const pageActive = ref<number>(1);
+    const limitPerPage = ref<number>(5);
+    const totalPages = ref<number>(1);
+    const search = ref<string>('');
+
     return {
       centros_custo: computed(() => store.state.centrocusto.ccs),
       store,
       notify,
+      
+      limitPerPage,
+      pageActive,
+      totalPages,
+      // Entradas filtradas de acordo com a paginação
+      filteredEntries: computed(() => {
+        let newEntries = store.state.centrocusto.ccs;
+        // eslint-disable-next-line vue/no-side-effects-in-computed-properties
+        totalPages.value = arr.pages(newEntries, limitPerPage.value);
+        newEntries = arr.paginate(newEntries, pageActive.value, limitPerPage.value);
+        return newEntries;
+      }),
+
+      // Renderização da paginação
+      renderPagination: computed(() => {
+        let pagination = arr.pagination(totalPages.value, pageActive.value, 2);
+        return pagination;
+      })
     };
   },
   methods: {
