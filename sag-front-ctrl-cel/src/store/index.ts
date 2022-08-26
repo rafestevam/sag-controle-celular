@@ -3,6 +3,7 @@ import { InjectionKey } from "vue";
 import { createStore, Store, useStore as vuexUseStore } from "vuex";
 import { aparelho, AparelhoState } from "./modules/aparelho";
 import { centrocusto, CentroCustoState } from "./modules/centrocusto";
+import { funcionario, FuncionarioState } from "./modules/funcionario";
 import { linha, LinhaState } from "./modules/linha";
 import { DELETE_NOTIFICATION, NOTIFY } from "./modules/notif/constants/mutation-type";
 
@@ -10,6 +11,7 @@ export interface AppState {
     centrocusto: CentroCustoState,
     aparelho: AparelhoState,
     linha: LinhaState,
+    funcionario: FuncionarioState,
     // notif: NotificationState,
     notifications: INotification[],
     modalNotifications: IModalNotification[],
@@ -27,6 +29,9 @@ export const store = createStore<AppState>({
         },
         linha: {
             linhas: [],
+        },
+        funcionario: {
+            funcionarios: []
         },
         notifications: [],
         modalNotifications: [],
@@ -54,6 +59,7 @@ export const store = createStore<AppState>({
         centrocusto,
         aparelho,
         linha,
+        funcionario,
     },
 });
 
