@@ -101,7 +101,13 @@ const routes:  RouteRecordRaw[] = [
                 path: 'novo',
                 name: 'FormularioFuncionarios',
                 component: FormularioFuncionarios
-            }
+            },
+            {
+                path: ':id',
+                name: 'AtualizarFuncionario',
+                component: FormularioFuncionarios,
+                props: true,
+            },
         ]
     }
 ];
