@@ -40,6 +40,16 @@
             {label: 'Listar Todos', route: '/cc'}
           ]"/>
 
+        <!-- Modulo: Funcionarios -->
+        <MainNavItem 
+          label="Funcionários" 
+          icon="fa-solid fa-user-group" 
+          :isDropDown="true" 
+          :dropDownItems="[
+            {label: 'Adicionar Novo', route: '/funcionarios/novo'},
+            {label: 'Listar Todos', route: '/funcionarios'}
+          ]"/>
+
         <!-- Modulo: Aparelhos de Telefone -->
         <MainNavItem 
           label="Aparelhos" 
@@ -58,16 +68,6 @@
           :dropDownItems="[
             {label: 'Adicionar Nova', route: '/linhas/nova'},
             {label: 'Listar Todas', route: '/linhas'}
-          ]"/>
-
-        <!-- Modulo: Funcionarios -->
-        <MainNavItem 
-          label="Funcionários" 
-          icon="fa-solid fa-user-group" 
-          :isDropDown="true" 
-          :dropDownItems="[
-            {label: 'Adicionar Novo', route: '/funcionarios/novo'},
-            {label: 'Listar Todos', route: '/funcionarios'}
           ]"/>
 
       </div>
