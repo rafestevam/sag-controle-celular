@@ -1,4 +1,3 @@
-<!-- eslint-disable vue/no-side-effects-in-computed-properties -->
 <template>
   <div>
     <h1 class="subtitle">Lista de Centros de Custo</h1>
