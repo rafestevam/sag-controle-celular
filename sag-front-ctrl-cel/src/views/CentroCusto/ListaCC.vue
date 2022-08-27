@@ -43,18 +43,31 @@
           </div>
           <div class="field is-narrow">
             <div class="control">
-              por página
+              linhas por página
             </div>
           </div>
         </div>
+
+        <!-- Input de busca de dados -->
+        <div class="field-body">
+          <div class="field is-grouped is-grouped-right">
+            <div class="control has-icons-right">
+              <input type="text" class="input" v-model="search" placeholder="Busca...">
+              <span class="icon is-small is-right">
+                <i class="fa-solid fa-magnifying-glass"></i>
+              </span>
+            </div>
+          </div>
+        </div>
+
       </div>
 
       <table id="centros_custo" class="table is-fullwidth" v-if="centros_custo">
         <thead>
           <tr>
-            <td>Código</td>
-            <td>Nome</td>
-            <td>Ações</td>
+            <th>Código</th>
+            <th>Nome</th>
+            <th>Ações</th>
           </tr>
         </thead>
         <tbody>
@@ -97,7 +110,7 @@
           <li><a href="#" @click.prevent="pageActive = (pageActive > 1) ? pageActive - 1 : pageActive" class="pagination-link">&#8249;</a></li>
 
           <li v-for="(page, index) in renderPagination" :key="index">
-            <a class="pagination-link" href="#" @click.prevent="pageActive = Number(page)">{{ page }}</a>
+            <a class="pagination-link" :class="{'is-current': pageActive === Number(page)}" href="#" @click.prevent="pageActive = Number(page)">{{ page }}</a>
           </li>
 
           <li><a href="#" @click.prevent="pageActive = (pageActive < totalPages) ? pageActive + 1 : pageActive" class="pagination-link">&#8250;</a></li>
@@ -155,9 +168,15 @@ export default defineComponent({
       limitPerPage,
       pageActive,
       totalPages,
+      search,
+      // sort,
       // Entradas filtradas de acordo com a paginação
       filteredEntries: computed(() => {
         let newEntries = store.state.centrocusto.ccs;
+        if(search.value.length >= 2) {
+          newEntries = arr.search(store.state.centrocusto.ccs, search.value);
+        }
+        //newEntries = arr.sort(newEntries, 'cc_cod', 'asc');
         // eslint-disable-next-line vue/no-side-effects-in-computed-properties
         totalPages.value = arr.pages(newEntries, limitPerPage.value);
         newEntries = arr.paginate(newEntries, pageActive.value, limitPerPage.value);
