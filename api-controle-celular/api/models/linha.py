@@ -93,7 +93,7 @@ class LinhaModel(db.Model):
     @classmethod
     def get_all(cls):
         try:
-            return [linha.to_json() for linha in cls.query.all()]
+            return [linha.to_json() for linha in cls.query.order_by(LinhaModel.numero)]
         except:
             error = error = sys.exc_info()[1]
             raise RuntimeError(error)

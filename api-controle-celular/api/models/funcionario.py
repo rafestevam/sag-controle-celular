@@ -96,7 +96,7 @@ class FuncionarioModel(db.Model):
     @classmethod
     def get_all(cls):
         try:
-            return [funcionario.to_json() for funcionario in cls.query.all()]
+            return [funcionario.to_json() for funcionario in cls.query.order_by(FuncionarioModel.nome_social)]
         except:
             error = sys.exc_info()[1]
             raise error

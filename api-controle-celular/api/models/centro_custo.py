@@ -68,7 +68,7 @@ class CentroCustoModel(db.Model):
     @classmethod
     def get_all(cls):
         try:
-            return [centro_custo.to_json() for centro_custo in cls.query.all()]
+            return [centro_custo.to_json() for centro_custo in cls.query.order_by(CentroCustoModel.cc_cod)]
         except:
             error = sys.exc_info()[1]
             raise RuntimeError(error)

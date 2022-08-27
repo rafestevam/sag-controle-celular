@@ -96,7 +96,7 @@ class AparelhoModel(db.Model):
     @classmethod
     def get_all(cls):
         try:
-            return [aparelho.to_json() for aparelho in cls.query.all()]
+            return [aparelho.to_json() for aparelho in cls.query.order_by(AparelhoModel.imei)]
         except:
             error = sys.exc_info()[1]
             raise RuntimeError(error)
