@@ -8,6 +8,7 @@ import {
   GET_ALL_FUNC,
   POST_FUNC,
   PUT_FUNC,
+  TEST_API,
 } from "./constants/action-type";
 import { ADD_CC_2_FUNC, LIST_ALL_FUNC } from "./constants/mutation-type";
 
@@ -79,5 +80,10 @@ export const funcionario: Module<FuncionarioState, AppState> = {
         );
       });
     },
+    [TEST_API](ctx){
+      return httpClient.get('/hello').then(() => {
+        console.log('Teste de API realizado com sucesso!');
+      });
+    }
   },
 };
