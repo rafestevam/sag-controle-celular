@@ -166,7 +166,6 @@ import useNotificator from "@/hooks/Notificator";
 import {
   DELETE_FUNC,
   GET_ALL_FUNC,
-  TEST_API,
 } from "@/store/modules/funcionario/constants/action-type";
 import { computed, defineComponent, ref } from "vue";
 import BoxNotification from "@/components/BoxNotification/BoxNotification.vue";
@@ -265,7 +264,7 @@ export default defineComponent({
             `Funcionário ${funcionario.nome_social} excluído com sucesso!`
           );
           this.deletedFuncId = funcionario.id;
-          this.modalActive = true;
+          this.modalActive = false;
         })
         .catch((err) => {
           this.notify(NotificationType.DANGER, `${err.response.data.message}`);
