@@ -57,7 +57,6 @@ class FuncionarioResource(Resource):
     #     action='append'
     # )
     
-
     def get(self, id):
         try:
             funcionario = FuncionarioModel.find_by_id(id)
@@ -90,7 +89,7 @@ class FuncionarioResource(Resource):
         except RuntimeError as e:
             return {"message": f"Erro interno {str(e)}"}, 500
 
-    def delete(self):
+    def delete(self, id):
         try:
             funcionario = FuncionarioModel.find_by_id(id)
             if not funcionario:
