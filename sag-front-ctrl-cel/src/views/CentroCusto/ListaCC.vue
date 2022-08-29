@@ -58,7 +58,6 @@
             </div>
           </div>
         </div>
-
       </div>
 
       <table id="centros_custo" class="table is-fullwidth" v-if="centros_custo">
@@ -158,6 +157,7 @@ export default defineComponent({
     const limitPerPage = ref<number>(5);
     const totalPages = ref<number>(1);
     const search = ref<string>('');
+    const deletedCCId = ref<string>('');
 
     return {
       centros_custo: computed(() => store.state.centrocusto.ccs),
@@ -168,7 +168,7 @@ export default defineComponent({
       pageActive,
       totalPages,
       search,
-      // sort,
+      deletedCCId,
       // Entradas filtradas de acordo com a paginação
       filteredEntries: computed(() => {
         let newEntries = store.state.centrocusto.ccs;
@@ -176,6 +176,11 @@ export default defineComponent({
           newEntries = arr.search(store.state.centrocusto.ccs, search.value);
         }
         //newEntries = arr.sort(newEntries, 'cc_cod', 'asc');
+        if(deletedCCId.value != ""){
+          newEntries = newEntries.filter(
+            (cc) => cc.id != deletedCCId.value
+          );
+        }
         // eslint-disable-next-line vue/no-side-effects-in-computed-properties
         totalPages.value = arr.pages(newEntries, limitPerPage.value);
         newEntries = arr.paginate(newEntries, pageActive.value, limitPerPage.value);
@@ -186,7 +191,7 @@ export default defineComponent({
       renderPagination: computed(() => {
         let pagination = arr.pagination(totalPages.value, pageActive.value, 2);
         return pagination;
-      })
+      }),
     };
   },
   methods: {
@@ -213,6 +218,7 @@ export default defineComponent({
             `Centro de Custo ${cc_cod} excluído com sucesso!`
           );
           this.modalActive = false;
+          this.deletedCCId = id;
         })
         .catch((err) => {
           this.notify(NotificationType.DANGER, `${err.response.data.message}`);
