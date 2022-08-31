@@ -1,4 +1,4 @@
-import IFuncionario from "./IFuncionario";
+import ILinha from "./ILinha";
 
 export enum AparelhoStatus {
     EM_USO = 'Em Uso',
@@ -12,7 +12,8 @@ export default interface IAparelho {
     marca: string,
     modelo: string,
     numero_serie: string,
+    acessorios: string,
     status: string,
-    // linha: ILinha,
-    funcionario: IFuncionario,
+    funcionario_id: string,
+    linha: ILinha,
 }

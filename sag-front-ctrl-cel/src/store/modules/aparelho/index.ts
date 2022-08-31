@@ -5,6 +5,7 @@ import { Module } from "vuex";
 import {
   DELETE_APARELHO,
   GET_ALL_APARELHOS,
+  GET_APARELHOS_NO_LINHAS,
   POST_APARELHO,
   PUT_APARELHO,
 } from "./constants/action-type";
@@ -53,6 +54,16 @@ export const aparelho: Module<AparelhoState, AppState> = {
           (device) => device.id != idAparelho
         );
       });
+    },
+    [GET_APARELHOS_NO_LINHAS]({ commit }){
+      httpClient
+        .get("aparelhos")
+        .then((resp) => {
+          commit(LIST_ALL_APARELHOS, resp.data);
+          store.state.aparelho.aparelhos = store.state.aparelho.aparelhos.filter(
+            (device) => device.linha == null
+          );
+        });
     },
   },
 };
