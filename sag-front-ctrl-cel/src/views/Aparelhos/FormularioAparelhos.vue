@@ -152,25 +152,78 @@
           </div>
         </div>
 
-        <!-- Linha Vinculada -->
-        <!-- <div class="field is-horizontal">
+        <!-- Acessorios -->
+        <div class="field is-horizontal">
           <div class="field-label is-normal">
-            <label class="label">Linha Telefônica</label>
+            <label class="label">Acessórios</label>
+          </div>
+          <div class="field-body">
+            <div class="field">
+              <p class="control is-expanded">
+                <!-- <input type="text" class="input" placeholder="" /> -->
+                <Field
+                  name="iAcessorios"
+                  as="textarea"
+                  class="textarea"
+                  v-model="aparelho.acessorios"
+                  :class="{ 'is-danger': errors.iAcessorios }"
+                />
+              </p>
+              <p class="help is-danger">{{ errors.iAcessorios }}</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Linha Vinculada -->
+        <div class="field is-horizontal" v-if="aparelho.linha">
+          <div class="field-label is-normal">
+            <label class="label">Linha Vinculada</label>
           </div>
           <div class="field-body">
             <div class="field is-narrow">
               <div class="control">
-                <div class="select">
+                <label class="input">
+                  {{
+                    `(${aparelho.linha.ddd}) ${aparelho.linha.numero.substring(
+                      0,
+                      5
+                    )}-${aparelho.linha.numero.substring(5, 9)}`
+                  }}
+                </label>
+                <!-- <div class="select">
                   <Field name="iLinha" as="select" v-model="linhaTelefonica">
                     <option value="" selected>Selecione uma linha</option>
                     <option value="1">(11) 91234-5678</option>
                     <option value="2">(61) 98765-4321</option>
                   </Field>
+                </div> -->
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Funcionario Vinculado -->
+        <div class="field is-horizontal">
+          <div class="field-label is-normal">
+            <label class="label">Funcionário</label>
+          </div>
+          <div class="field-body">
+            <div class="field">
+              <div class="control">
+                <div class="is-fullwidth">
+                  <v-select v-model="funcionarioVinculado"
+                    placeholder="Escolha um funcionário..."
+                    :options="funcionarios"
+                    label="nome_social"
+                    :multiple="false"
+                    :clearable="false"
+                  >
+                  </v-select>
                 </div>
               </div>
             </div>
           </div>
-        </div> -->
+        </div>
 
         <!-- Status -->
         <div class="field is-horizontal">
@@ -181,7 +234,7 @@
             <div class="field">
               <p class="control is-expanded">
                 <label class="input">{{
-                  linhaTelefonica != ""
+                  ( aparelho.funcionario_id )
                     ? aparelhoStatus.EM_USO
                     : aparelhoStatus.DISPONIVEL
                 }}</label>
@@ -213,7 +266,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, ref } from "vue";
+import { defineComponent, ref, computed } from "vue";
 import { Form, Field } from "vee-validate";
 import * as Yup from "yup";
 import { useStore } from "@/store";
@@ -221,6 +274,8 @@ import useNotificator from "@/hooks/Notificator";
 import IAparelho, { AparelhoStatus } from "@/interfaces/IAparelho";
 import { DELETE_APARELHO, POST_APARELHO, PUT_APARELHO } from "@/store/modules/aparelho/constants/action-type";
 import { NotificationType } from "@/interfaces/INotification";
+import IFuncionario from "@/interfaces/IFuncionario";
+import { GET_ALL_FUNC } from "@/store/modules/funcionario/constants/action-type";
 
 export default defineComponent({
   name: "FormularioAparelhosViewComponent",
@@ -245,10 +300,11 @@ export default defineComponent({
       iMarca: Yup.string().required("O campo Fabricante é obrigatório"),
       iModelo: Yup.string().required("O campo Fabricante é obrigatório"),
       iNumSerie: Yup.string().required("O campo Número de Série é obrigatório"),
+      iAcessorios: Yup.string().required("O campo Acessórios é obrigatório"),
     });
     return {
       aparelhoSchema,
-      linhaTelefonica: "",
+      options: ['Teste1', 'Teste2'],
     };
   },
   setup(props) {
@@ -256,11 +312,21 @@ export default defineComponent({
     const { notify } = useNotificator();
     const aparelho = ref({} as IAparelho);
     const aparelhoStatus = AparelhoStatus;
+    const funcionarioVinculado = ref({} as IFuncionario);
+    store.dispatch(GET_ALL_FUNC);
+
     if (props.id) {
       const device = store.state.aparelho?.aparelhos.find(
         (apar) => apar.id == props.id
       );
       aparelho.value = device as IAparelho;
+      
+      if(device?.funcionario_id){
+        const employee = store.state.funcionario?.funcionarios.find(
+          (empl) => empl.id == device?.funcionario_id
+        )
+        funcionarioVinculado.value = employee as IFuncionario;
+      }
     }
 
     return {
@@ -268,12 +334,18 @@ export default defineComponent({
       notify,
       aparelho,
       aparelhoStatus,
+      funcionarios: computed(() => store.state.funcionario.funcionarios),
+      funcionarioVinculado,
     };
   },
   methods: {
     saveAparelho() {
       if (this.id) {
         console.log("ALTERANDO APARELHO");
+        if(this.funcionarioVinculado){
+          this.aparelho.funcionario_id = this.funcionarioVinculado.id;
+          this.aparelho.status = this.aparelhoStatus.EM_USO;
+        }
         this.store
           .dispatch(PUT_APARELHO, this.aparelho)
           .then(() => {
@@ -288,6 +360,10 @@ export default defineComponent({
           });
       } else {
         this.aparelho.status = this.aparelhoStatus.DISPONIVEL;
+        if(this.funcionarioVinculado){
+          this.aparelho.funcionario_id = this.funcionarioVinculado.id;
+          this.aparelho.status = this.aparelhoStatus.EM_USO;
+        }
         this.store
           .dispatch(POST_APARELHO, this.aparelho)
           .then(() => {
