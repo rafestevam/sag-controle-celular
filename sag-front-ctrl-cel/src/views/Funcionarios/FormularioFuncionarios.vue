@@ -212,7 +212,7 @@
         </div>
 
         <!-- Telefones em Posse -->
-        <div class="field is-horizontal">
+        <div class="field is-horizontal" v-if="funcionario.aparelhos.length > 0">
           <div class="field-label is-normal">
             <label class="label">Telefones em Posse</label>
           </div>
@@ -221,19 +221,51 @@
               <div class="control is-expanded">
                 <table class="table">
                   <thead>
-                    <th><abbr title="Aparelho"></abbr></th>
-                    <th><abbr title="Marca"></abbr></th>
-                    <th><abbr title="Modelo"></abbr></th>
-                    <th><abbr title="Num. Série"></abbr></th>
-                    <th><abbr title="Num. Linha"></abbr></th>
+                    <th><abbr title="Aparelho">Aparelho</abbr></th>
+                    <th><abbr title="Marca">Marca</abbr></th>
+                    <th><abbr title="Modelo">Modelo</abbr></th>
+                    <th><abbr title="Num. Série"># Série</abbr></th>
+                    <th><abbr title="Num. Linha"># Linha</abbr></th>
                   </thead>
+                  <tbody>
+                    <tr v-for="(device, idx) in funcionario.aparelhos" :key="idx">
+                      <td>{{ device.imei}}</td>
+                      <td>{{ device.marca}}</td>
+                      <td>{{ device.modelo}}</td>
+                      <td>{{ device.numero_serie}}</td>
+                      <td>{{ numeroTelefone(device.linha) }}</td>
+                    </tr>
+                  </tbody>
                 </table>
               </div>
             </div>
           </div>
         </div>
 
-        <!-- Aparelho em Posse -->
+        <!-- Linhas em Posse -->
+        <div class="field is-horizontal" v-if="funcionario.linhas.length > 0">
+          <div class="field-label is-normal">
+            <label class="label">Linhas em Posse</label>
+          </div>
+          <div class="field-body">
+            <div class="field">
+              <div class="control is-expanded">
+                <table class="table">
+                  <thead>
+                    <th><abbr title="DDD">DDD</abbr></th>
+                    <th><abbr title="Num. Linha"># Linha</abbr></th>
+                  </thead>
+                  <tbody>
+                    <tr v-for="(line, idx) in funcionario.linhas" :key="idx">
+                      <td>{{ line.ddd }}</td>
+                      <td>{{ numeroTelefone(line) }}</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
 
         <!-- Submeter Formulario -->
         <div class="field is-horizontal">
@@ -269,6 +301,7 @@ import {
 } from "@/store/modules/funcionario/constants/action-type";
 import useNotificator from "@/hooks/Notificator";
 import { NotificationType } from "@/interfaces/INotification";
+import ILinha from "@/interfaces/ILinha";
 
 export default defineComponent({
   name: "FormularioFuncionariosViewComponent",
@@ -289,6 +322,7 @@ export default defineComponent({
     const { notify } = useNotificator();
 
     const selectedCostCenter = ref('');
+    // const numTel = ref('');
 
     if (props.id) {
       const employee = store.state.funcionario?.funcionarios.find(
@@ -304,6 +338,15 @@ export default defineComponent({
       ccs: computed(() => store.state.centrocusto.ccs),
       funcionario,
       selectedCostCenter,
+      // numeroTelefone: computed({
+        // get() {
+        //   return numTel.value;
+        // },
+        // set(linha) {
+        //   numTel.value = `(${linha?.ddd}) ${linha?.numero.substring(0,5)}-${linha?.numero.substring(5, 9)}`
+        //   return numTel;
+        // }
+      // }),
     };
   },
   data() {
@@ -370,10 +413,22 @@ export default defineComponent({
     selectCostCenter(){
       console.log('Centro de Custo selecionado');
     },
+    getNumeroTelefone(linha: ILinha){ 
+      return `(${linha?.ddd}) ${linha?.numero.substring(0,5)}-${linha?.numero.substring(5, 9)}`
+    }
   },
   computed: {
     employeeCostCenter() {
       return this.funcionario.centro_custo?.id || "";
+    },
+    numeroTelefone() {
+      return (linha: ILinha) => {
+        if(linha != undefined){
+          return `(${linha?.ddd}) ${linha?.numero.substring(0,5)}-${linha?.numero.substring(5, 9)}`;
+        } else {
+          return 'N/A';
+        }
+      }
     },
   },
 });
