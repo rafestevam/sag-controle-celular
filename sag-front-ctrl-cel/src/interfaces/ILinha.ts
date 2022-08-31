@@ -1,3 +1,4 @@
+import IAparelho from "./IAparelho";
 import IFuncionario from "./IFuncionario";
 
 export enum LinhaStatus {
@@ -10,5 +11,10 @@ export default interface ILinha {
     numero: string,
     classificacao: string,
     status: string,
-    funcionario: IFuncionario,
+    funcionario_id: string,
+    funcionarioVinculado: IFuncionario,
+    aparelho_id: string,
+    aparelhoVinculado: IAparelho,
+    last_funcionario_id: string,
+    lastFuncionario: IFuncionario,
 }
