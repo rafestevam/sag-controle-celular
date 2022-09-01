@@ -71,6 +71,10 @@ class LinhaResource(Resource):
             linha = LinhaModel.find_by_id(id)
             if not linha:
                 return {"message": "Linha não encontrada"}, 400
+            if linha.funcionario_id:
+                return {"message": "Linha está atribuída a um funcionário"}, 400
+            if linha.aparelho_id:
+                return {"message": "Linha está atribuída a um aparelho"}, 400
             linha.delete()
             return {"message": "Linha excluída com sucesso"}, 200
         except RuntimeError as e:
