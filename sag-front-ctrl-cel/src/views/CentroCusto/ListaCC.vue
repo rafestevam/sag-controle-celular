@@ -222,6 +222,7 @@ export default defineComponent({
         })
         .catch((err) => {
           this.notify(NotificationType.DANGER, `${err.response.data.message}`);
+          this.modalActive = false;
         });
     },
   },
