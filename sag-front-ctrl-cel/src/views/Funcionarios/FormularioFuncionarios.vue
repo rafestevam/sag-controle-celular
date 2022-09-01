@@ -302,6 +302,7 @@ import {
 import useNotificator from "@/hooks/Notificator";
 import { NotificationType } from "@/interfaces/INotification";
 import ILinha from "@/interfaces/ILinha";
+import IAparelho from "@/interfaces/IAparelho";
 
 export default defineComponent({
   name: "FormularioFuncionariosViewComponent",
@@ -330,6 +331,9 @@ export default defineComponent({
       );
       funcionario.value = employee as IFuncionario;
       selectedCostCenter.value = employee?.centro_custo_id || "";
+    } else{
+      funcionario.value.aparelhos = [] as IAparelho[];
+      funcionario.value.linhas = [] as ILinha[];
     }
 
     return {
