@@ -94,6 +94,10 @@ class FuncionarioResource(Resource):
             funcionario = FuncionarioModel.find_by_id(id)
             if not funcionario:
                 return {"message": "Funcionario não encontrado"}, 400
+            if funcionario.aparelhos:
+                return {"message": "Funcionário tem aparelhos atribuídos"}, 400
+            if funcionário.linhas:
+                return {"message": "Funcionário tem linhas atribuídas"}, 400
             funcionario.delete()
             return {"message": "Funcionário excluído com sucesso"}, 200
         except RuntimeError as e:
