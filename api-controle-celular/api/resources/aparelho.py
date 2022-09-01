@@ -97,6 +97,10 @@ class AparelhoResource(Resource):
             aparelho = AparelhoModel.find_by_id(id)
             if not aparelho:
                 return {"message": "Aparelho não encontrado"}, 400
+            if aparelho.funcionario_id:
+                return {"message": "Aparelho está atribuído a um funcionário"}, 400
+            if aparelho.linha:
+                return {"message": "Aparelho está atribuído a uma linha"}, 400
             aparelho.delete()
             return {"message": "Aparelho excluído com sucesso"}, 200
         except RuntimeError as e:
