@@ -178,9 +178,9 @@
             <label class="label">Centro de Custo</label>
           </div>
           <div class="field-body">
-            <div class="field is-narrow">
+            <div class="field">
               <div class="control">
-                <div class="select is-fullwidth">
+                <div class="is-fullwidth">
                   <!-- <Field
                     v-model="selectedCostCenter"
                     name="iCentroCusto"
@@ -188,7 +188,7 @@
                     class="input"
                     :class="{ 'is-danger': errors.iCentroCusto }"
                   > -->
-                  <Field
+                  <!-- <Field
                     v-model="funcionario.centro_custo_id"
                     name="iCentroCusto"
                     as="select"
@@ -203,7 +203,24 @@
                     >
                       {{ centrocusto.cc_cod }} - {{ centrocusto.cc_nome }}
                     </option>
-                  </Field>
+                  </Field> -->
+                  <v-select v-model="funcionario.centro_custo_id"
+                    placeholder="Escolha um Centro de Custo..."
+                    :options="ccs"
+                    label="cc_cod"
+                    :reduce="(cc: ICentroCusto) => cc.id"
+                    :multiple="false"
+                    :clearable="true"
+                  >
+                    <template #option="{cc_cod, cc_nome}">
+                      <p>{{ cc_cod}} - {{ cc_nome }}</p>
+                    </template>
+                  </v-select>
+                  <Field
+                    v-model="funcionario.centro_custo_id"
+                    name="iCentroCusto"
+                    as="hidden"
+                  />
                 </div>
                 <p class="help is-danger">{{ errors.iCentroCusto }}</p>
               </div>
@@ -303,6 +320,7 @@ import useNotificator from "@/hooks/Notificator";
 import { NotificationType } from "@/interfaces/INotification";
 import ILinha from "@/interfaces/ILinha";
 import IAparelho from "@/interfaces/IAparelho";
+import ICentroCusto from "@/interfaces/ICentroCusto";
 
 export default defineComponent({
   name: "FormularioFuncionariosViewComponent",
