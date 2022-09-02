@@ -10,6 +10,8 @@ import "vue-select/dist/vue-select.css";
 import '@fortawesome/fontawesome-free/css/all.css';
 import { maska } from 'maska';
 
+require('@/assets/main.scss');
+
 createApp(App)
     .use(router)
     .use(store, key)
