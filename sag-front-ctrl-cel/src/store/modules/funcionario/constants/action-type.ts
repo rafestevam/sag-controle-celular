@@ -5,3 +5,4 @@ export const PUT_FUNC = 'PUT_FUNC';
 export const DELETE_FUNC = 'DELETE_FUNC';
 export const TEST_API = 'TEST_API';
 export const GENERATE_TERMO = 'GENERATE_TERMO';
+export const POST_BULK_FUNC = 'POST_BULK_FUNC';

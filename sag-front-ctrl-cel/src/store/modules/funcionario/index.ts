@@ -7,6 +7,7 @@ import {
   DELETE_FUNC,
   GENERATE_TERMO,
   GET_ALL_FUNC,
+  POST_BULK_FUNC,
   POST_FUNC,
   PUT_FUNC,
   TEST_API,
@@ -40,6 +41,7 @@ export const funcionario: Module<FuncionarioState, AppState> = {
       });
     },
     [POST_FUNC](ctx, funcionario: IFuncionario) {
+      console.log(funcionario);
       return httpClient.post("/funcionarios", funcionario, {
         headers: {
           "Content-Type": "application/json",
@@ -88,6 +90,14 @@ export const funcionario: Module<FuncionarioState, AppState> = {
     },
     [GENERATE_TERMO](ctx, idFuncionario: string){
       return httpClient.get(`/compose/${idFuncionario}`);
+    },
+    [POST_BULK_FUNC](ctx, file){
+      return httpClient
+        .post('/bulk/funcionarios', file, {
+          headers: {
+            'Content-Type': 'multipart/form-data'
+          }
+        });
     }
   },
 };

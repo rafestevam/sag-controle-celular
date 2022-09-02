@@ -4,7 +4,7 @@ import IFuncionario from "@/interfaces/IFuncionario";
 import ILinha from "@/interfaces/ILinha";
 import { AppState, store } from "@/store";
 import { Module } from "vuex";
-import { DELETE_LINHA, GET_ALL_LINHAS, POST_LINHA, PUT_LINHA } from "./constants/action-type";
+import { DELETE_LINHA, GET_ALL_LINHAS, POST_BULK_LINHAS, POST_LINHA, PUT_LINHA } from "./constants/action-type";
 import { ADD_DEVICE_2_LINHAS, ADD_FUNC_2_LINHAS, ADD_LASTFUNC_2_LINHAS, LIST_ALL_LINHAS } from "./constants/mutation-type";
 
 export interface LinhaState {
@@ -98,6 +98,14 @@ export const linha: Module<LinhaState, AppState> = {
                             (line) => line.id != idLinha
                         );
                     });
-        }
+        },
+        [POST_BULK_LINHAS](ctx, file){
+            return httpClient
+              .post('/bulk/linhas', file, {
+                headers: {
+                  'Content-Type': 'multipart/form-data'
+                }
+              });
+          }
     }
 }

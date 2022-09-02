@@ -1,7 +1,7 @@
 import ICentroCusto from "@/interfaces/ICentroCusto";
 import { Module } from "vuex";
 import { AppState, store } from "@/store";
-import { DELETE_CC, GET_ALL_CC, GET_CC, POST_CC, PUT_CC } from "./constants/action-type";
+import { DELETE_CC, GET_ALL_CC, GET_CC, POST_BULK_CC, POST_CC, PUT_CC } from "./constants/action-type";
 import { LIST_ALL_CC, LIST_ONE_CC } from "./constants/mutation-type";
 import http from "@/http";
 
@@ -56,6 +56,14 @@ export const centrocusto: Module<CentroCustoState, AppState> = {
           ccs.push(resp.data);
           ctx.commit(LIST_ONE_CC, resp.data)}
         );
+    },
+    [POST_BULK_CC](ctx, file){
+      return http
+        .post('/bulk/cc', file, {
+          headers: {
+            'Content-Type': 'multipart/form-data'
+          }
+        });
     }
   },
 };
