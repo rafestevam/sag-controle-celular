@@ -3,11 +3,7 @@
     <h1 class="subtitle">Adicionar ou Alterar Aparelho</h1>
   </div>
   <section class="main-form">
-    <Form
-      @submit="saveAparelho"
-      :validation-schema="aparelhoSchema"
-      v-slot="{ errors }"
-    >
+    <Form @submit="saveAparelho" :validation-schema="aparelhoSchema" v-slot="{ errors }">
       <div class="container is-widescreen">
         <!-- IMEI/IMEI2 -->
         <div class="field is-horizontal">
@@ -201,7 +197,7 @@
             </div>
           </div>
         </div>
-        
+
         <!-- Funcionario Vinculado -->
         <div class="field is-horizontal">
           <div class="field-label is-normal">
@@ -211,12 +207,13 @@
             <div class="field">
               <div class="control">
                 <div class="is-fullwidth">
-                  <v-select v-model="funcionarioVinculado"
+                  <v-select
+                    v-model="funcionarioVinculado"
                     placeholder="Escolha um funcionário..."
                     :options="funcionarios"
                     label="nome_social"
                     :multiple="false"
-                    :clearable="false"
+                    :clearable="true"
                   >
                   </v-select>
                 </div>
@@ -234,7 +231,7 @@
             <div class="field">
               <p class="control is-expanded">
                 <label class="input">{{
-                  ( aparelho.funcionario_id )
+                  aparelho.funcionario_id
                     ? aparelhoStatus.EM_USO
                     : aparelhoStatus.DISPONIVEL
                 }}</label>
@@ -252,10 +249,12 @@
             <div class="field is-grouped">
               <div class="control">
                 <!-- <button class="button is-primary">Salvar</button> -->
-                <input type="submit" class="button is-primary" value="Salvar">
+                <input type="submit" class="button is-primary" value="Salvar" />
               </div>
               <div class="control">
-                <router-link to="/aparelhos" class="button is-light">Cancelar</router-link>
+                <router-link to="/aparelhos" class="button is-light"
+                  >Cancelar</router-link
+                >
               </div>
             </div>
           </div>
@@ -272,7 +271,11 @@ import * as Yup from "yup";
 import { useStore } from "@/store";
 import useNotificator from "@/hooks/Notificator";
 import IAparelho, { AparelhoStatus } from "@/interfaces/IAparelho";
-import { DELETE_APARELHO, POST_APARELHO, PUT_APARELHO } from "@/store/modules/aparelho/constants/action-type";
+import {
+  DELETE_APARELHO,
+  POST_APARELHO,
+  PUT_APARELHO,
+} from "@/store/modules/aparelho/constants/action-type";
 import { NotificationType } from "@/interfaces/INotification";
 import IFuncionario from "@/interfaces/IFuncionario";
 import { GET_ALL_FUNC } from "@/store/modules/funcionario/constants/action-type";
@@ -304,7 +307,7 @@ export default defineComponent({
     });
     return {
       aparelhoSchema,
-      options: ['Teste1', 'Teste2'],
+      options: ["Teste1", "Teste2"],
     };
   },
   setup(props) {
@@ -316,15 +319,13 @@ export default defineComponent({
     store.dispatch(GET_ALL_FUNC);
 
     if (props.id) {
-      const device = store.state.aparelho?.aparelhos.find(
-        (apar) => apar.id == props.id
-      );
+      const device = store.state.aparelho?.aparelhos.find((apar) => apar.id == props.id);
       aparelho.value = device as IAparelho;
-      
-      if(device?.funcionario_id){
+
+      if (device?.funcionario_id) {
         const employee = store.state.funcionario?.funcionarios.find(
           (empl) => empl.id == device?.funcionario_id
-        )
+        );
         funcionarioVinculado.value = employee as IFuncionario;
       }
     }
@@ -342,9 +343,12 @@ export default defineComponent({
     saveAparelho() {
       if (this.id) {
         console.log("ALTERANDO APARELHO");
-        if(this.funcionarioVinculado){
+        if (this.funcionarioVinculado) {
           this.aparelho.funcionario_id = this.funcionarioVinculado.id;
           this.aparelho.status = this.aparelhoStatus.EM_USO;
+        } else {
+          this.aparelho.funcionario_id = '';
+          this.aparelho.status = this.aparelhoStatus.DISPONIVEL;
         }
         this.store
           .dispatch(PUT_APARELHO, this.aparelho)
@@ -353,14 +357,14 @@ export default defineComponent({
               NotificationType.SUCCESS,
               `Aparelho ${this.aparelho.marca}-${this.aparelho.modelo} alterado com sucesso!`
             );
-            this.$router.push('/aparelhos');
+            this.$router.push("/aparelhos");
           })
-          .catch(err => {
+          .catch((err) => {
             this.notify(NotificationType.DANGER, err.response.data.message);
           });
       } else {
         this.aparelho.status = this.aparelhoStatus.DISPONIVEL;
-        if(this.funcionarioVinculado){
+        if (this.funcionarioVinculado) {
           this.aparelho.funcionario_id = this.funcionarioVinculado.id;
           this.aparelho.status = this.aparelhoStatus.EM_USO;
         }
@@ -371,7 +375,7 @@ export default defineComponent({
               NotificationType.SUCCESS,
               `Aparelho ${this.aparelho.marca}-${this.aparelho.modelo} cadastrado com sucesso!`
             );
-            this.$router.push('/aparelhos');
+            this.$router.push("/aparelhos");
           })
           .catch((err) => {
             this.notify(NotificationType.DANGER, err.response.data.message);
@@ -387,10 +391,10 @@ export default defineComponent({
             `Aparelho ${aparelho.marca}-${aparelho.modelo} excluído com sucesso!`
           );
         })
-        .catch(err => {
+        .catch((err) => {
           this.notify(NotificationType.DANGER, err.response.data.message);
         });
-    }
+    },
   },
 });
 </script>
