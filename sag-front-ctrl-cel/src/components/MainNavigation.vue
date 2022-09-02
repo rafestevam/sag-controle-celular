@@ -28,7 +28,7 @@
         <MainNavItem icon="fa-solid fa-house-user" label="Home" :isDropDown="false" route="/"/>
 
         <!-- Documentação -->
-        <MainNavItem icon="fa-solid fa-landmark" label="Documentação" :isDropDown="false" route="/"/>
+        <!-- <MainNavItem icon="fa-solid fa-landmark" label="Documentação" :isDropDown="false" route="/"/> -->
 
         <!-- Modulo: Centros de Custos -->
         <MainNavItem 
@@ -69,6 +69,25 @@
             {label: 'Adicionar Nova', route: '/linhas/nova'},
             {label: 'Listar Todas', route: '/linhas'}
           ]"/>
+
+        <!-- Modulo: Utilitários -->
+        <MainNavItem
+          label="Utilitários"
+          icon="fa-solid fa-laptop"
+          :isDropDown="true"
+          :dropDownItems="[
+            {label: 'Gerador de Termos', route: '/utilities/termo'},
+            {label: 'Carga em Lote', route: '/utilities/bulk'},
+          ]"
+        />
+
+        <!-- Modulo: Carga de Dados em Lote -->
+        <!-- <MainNavItem
+          label="Carga em Lote"
+          icon="fa-solid fa-truck-ramp-box"
+          :isDropDown="false"
+          route="/bulk"
+        /> -->
 
       </div>
 
