@@ -77,6 +77,7 @@ export const linha: Module<LinhaState, AppState> = {
                 'classificacao': linha.classificacao,
                 'status': linha.status,
                 'funcionario_id': linha.funcionario_id,
+                'aparelho_id': linha.aparelho_id,
             },{
                 headers: {
                     'Content-Type': 'application/json',
