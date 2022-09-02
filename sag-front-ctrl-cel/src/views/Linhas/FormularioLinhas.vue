@@ -92,6 +92,9 @@
                     :multiple="false"
                     :clearable="true"
                   >
+                    <template #option="{nome_social}">
+                      <p>{{ nome_social }}</p>
+                    </template>
                   </v-select>
                   <label class="input" v-else>N/A</label>
                   <!-- <v-select
@@ -128,11 +131,15 @@
                   <v-select v-model="linha.aparelho_id" v-if="!linha.funcionario_id"
                     placeholder="Escolha um aparelho..."
                     :options="aparelhos"
-                    label="imei"
+                    :label="'imei'"
+                    :value="(dvc: IAparelho) => dvc.imei"
                     :reduce="(dvc: IAparelho) => dvc.id"
                     :multiple="false"
                     :clearable="true"
                   >
+                    <template #option="{imei}">
+                      <p>{{ imei }}</p>
+                    </template>
                   </v-select>
                   <label class="input" v-else>N/A</label>
                   <!-- <v-select
@@ -247,7 +254,7 @@ import {
   PUT_LINHA,
 } from "@/store/modules/linha/constants/action-type";
 import { NotificationType } from "@/interfaces/INotification";
-import { GET_APARELHOS_NO_LINHAS } from "@/store/modules/aparelho/constants/action-type";
+import { GET_ALL_APARELHOS } from "@/store/modules/aparelho/constants/action-type";
 import { GET_ALL_FUNC } from "@/store/modules/funcionario/constants/action-type";
 import IFuncionario from "@/interfaces/IFuncionario";
 import IAparelho from "@/interfaces/IAparelho";
@@ -284,7 +291,8 @@ export default defineComponent({
     const linhaStatus = LinhaStatus;
 
     store.dispatch(GET_ALL_FUNC);
-    store.dispatch(GET_APARELHOS_NO_LINHAS);
+    // store.dispatch(GET_APARELHOS_NO_LINHAS);
+    store.dispatch(GET_ALL_APARELHOS);
 
     if (props.id) {
       const line = store.state.linha?.linhas.find((ln) => ln.id == props.id);
