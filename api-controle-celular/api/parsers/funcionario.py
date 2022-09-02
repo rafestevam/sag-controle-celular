@@ -47,7 +47,8 @@ class FuncionarioParser:
                     data_nascimento = str(row['data_nascimento']).strip()
                     cargo = str(row['cargo']).strip()
                     rg = str(row['rg']).strip()
-                    cpf = str(row['cpf']).strip()
+                    cpf_num = str(row['cpf']).strip()
+                    cpf = '{}.{}.{}-{}, '.format(cpf_num[:3], cpf_num[3:6], cpf_num[6:9], cpf_num[9:])
                     centro_custo_cod = str(row['centro_custo_cod']).strip()
 
                     centros_custo_id = ''
