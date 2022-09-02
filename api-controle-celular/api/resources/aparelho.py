@@ -76,8 +76,8 @@ class AparelhoResource(Resource):
             aparelho.acessorios = data["acessorios"]
             aparelho.status = data["status"]
             last_funcionario_id = aparelho.funcionario_id
-            if data["funcionario_id"]:
-                aparelho.funcionario_id = data["funcionario_id"]
+            # if data["funcionario_id"]:
+            aparelho.funcionario_id = data["funcionario_id"]
             # if data["linha_id"]:
             # aparelho.linha_id = data["linha_id"]
             if (aparelho.linha and (data["funcionario_id"] != last_funcionario_id)):
