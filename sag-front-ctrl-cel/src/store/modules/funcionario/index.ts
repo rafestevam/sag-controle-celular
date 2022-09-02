@@ -5,6 +5,7 @@ import { AppState, store } from "@/store";
 import { Module } from "vuex";
 import {
   DELETE_FUNC,
+  GENERATE_TERMO,
   GET_ALL_FUNC,
   POST_FUNC,
   PUT_FUNC,
@@ -84,6 +85,9 @@ export const funcionario: Module<FuncionarioState, AppState> = {
       return httpClient.get('/hello').then(() => {
         console.log('Teste de API realizado com sucesso!');
       });
+    },
+    [GENERATE_TERMO](ctx, idFuncionario: string){
+      return httpClient.get(`/compose/${idFuncionario}`);
     }
   },
 };
