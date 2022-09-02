@@ -47,7 +47,7 @@ class LinhaResource(Resource):
             linha.status = data["status"]
             linha.funcionario_id = data["funcionario_id"]
 
-            if (linha.aparelho_id != None or linha.aparelho_id != data["aparelho_id"]):
+            if (data["aparelho_id"] != '' and linha.aparelho_id != data["aparelho_id"]):
                 linha_vinc = LinhaModel.find_by_aparelho(data["aparelho_id"])
                 if linha_vinc:
                     return {"message": "Esta linha já está vinculada a um aparelho"}, 400
