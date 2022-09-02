@@ -9,6 +9,9 @@ class DocumentResource(Resource):
             funcionario =  FuncionarioModel.find_by_id(id)
             if not funcionario:
                 return {"message": "Funcionário não encontrado"}
+
+            if((funcionario.aparelhos.count() == 0) and (funcionario.linhas.count() == 0)):
+                return {"message": "Funcionário não tem Aparelhos e/ou Linhas atribuídos"}, 400
             
             DocumentComposer.cria_documento(funcionario)
 
