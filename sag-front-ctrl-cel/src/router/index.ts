@@ -12,6 +12,9 @@ import ListaAparelhos from "@/views/Aparelhos/ListaAparelhos.vue";
 import Funcionarios from "@/views/Funcionarios.vue";
 import FormularioFuncionarios from "@/views/Funcionarios/FormularioFuncionarios.vue";
 import ListaFuncionarios from "@/views/Funcionarios/ListaFuncionarios.vue";
+import Utilitarios from "@/views/Utilitarios.vue";
+import BulkLoading from "@/views/Utilitarios/BulkLoading.vue";
+import TermoComposer from "@/views/Utilitarios/TermoComposer.vue";
 
 const routes:  RouteRecordRaw[] = [
     {
@@ -108,6 +111,22 @@ const routes:  RouteRecordRaw[] = [
                 component: FormularioFuncionarios,
                 props: true,
             },
+        ]
+    },
+    {
+        path: '/utilities',
+        component: Utilitarios,
+        children: [
+            {
+                path: 'bulk',
+                name: 'CargaEmLote',
+                component: BulkLoading,
+            },
+            {
+                path: 'termo',
+                name: 'GeradorDeTermos',
+                component: TermoComposer,
+            }
         ]
     }
 ];
