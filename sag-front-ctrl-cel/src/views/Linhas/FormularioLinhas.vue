@@ -84,12 +84,13 @@
             <div class="field">
               <div class="control">
                 <div class="is-fullwidth">
-                  <v-select v-model="linha.funcionarioVinculado" v-if="linha.aparelhoVinculado.id == undefined"
+                  <v-select v-model="linha.funcionario_id" v-if="!linha.aparelho_id"
                     placeholder="Escolha um funcionário..."
                     :options="funcionarios"
                     label="nome_social"
+                    :reduce="(func: IFuncionario) => func.id"
                     :multiple="false"
-                    :clearable="false"
+                    :clearable="true"
                   >
                   </v-select>
                   <label class="input" v-else>N/A</label>
@@ -99,7 +100,7 @@
                     :options="funcionarios"
                     :getOptionsLabel="(empl: IFuncionario) => empl.nome_social"
                     :multiple="false"
-                    :clearable="false"
+                    :clearable="true"
                     :disabled="
                       linha.aparelhoVinculado?.id != undefined ? true : false
                     "
@@ -124,21 +125,23 @@
             <div class="field">
               <div class="control">
                 <div class="is-fullwidth">
-                  <v-select v-model="linha.aparelhoVinculado" 
-                    placeholder="Escolha um funcionário..."
+                  <v-select v-model="linha.aparelho_id" v-if="!linha.funcionario_id"
+                    placeholder="Escolha um aparelho..."
                     :options="aparelhos"
                     label="imei"
+                    :reduce="(dvc: IAparelho) => dvc.id"
                     :multiple="false"
-                    :clearable="false"
+                    :clearable="true"
                   >
                   </v-select>
+                  <label class="input" v-else>N/A</label>
                   <!-- <v-select
                     v-model="linha.aparelhoVinculado"
                     placeholder="Escolha um funcionário..."
                     :options="aparelhos"
                     :getOptionLabel="(device: IAparelho) => device.imei"
                     :multiple="false"
-                    :clearable="false"
+                    :clearable="true"
                     :disabled="
                       linha.funcionarioVinculado?.id != undefined ? true : false
                     "
@@ -314,15 +317,17 @@ export default defineComponent({
         //   this.linha.funcionarioVinculado.id || this.linha.aparelhoVinculado.id
         //     ? LinhaStatus.EM_USO
         //     : LinhaStatus.DISPONIVEL;
-        this.linha.funcionario_id = '';
-        this.linha.aparelho_id = '';
-        if(this.linha.funcionarioVinculado.id != undefined) {
-          this.linha.funcionario_id = this.linha.funcionarioVinculado.id;
+        if(this.linha.funcionario_id) {
           this.linha.status = LinhaStatus.EM_USO;
+        } else {
+          this.linha.funcionario_id = '';
+          this.linha.status = LinhaStatus.DISPONIVEL;
         }
-        if(this.linha.aparelhoVinculado.id != undefined) {
-          this.linha.aparelho_id = this.linha.aparelhoVinculado.id;
+        if(this.linha.aparelho_id) {
           this.linha.status = LinhaStatus.EM_USO;
+        } else {
+          this.linha.aparelho_id = '';
+          this.linha.status = LinhaStatus.DISPONIVEL;
         }
 
         this.store
@@ -342,7 +347,7 @@ export default defineComponent({
         this.linha.ddd = numTel.substring(0, 2);
         this.linha.numero = numTel.substring(2, 11);
         this.linha.status =
-          this.linha.funcionarioVinculado.id || this.linha.aparelhoVinculado.id
+          this.linha.funcionario_id || this.linha.aparelho_id
             ? LinhaStatus.EM_USO
             : LinhaStatus.DISPONIVEL;
         this.store
