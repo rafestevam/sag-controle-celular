@@ -216,11 +216,11 @@ export default defineComponent({
           );
         }
         //newEntries = arr.sort(newEntries, 'cc_cod', 'asc');
-        if (deletedFuncId.value != "") {
-          newEntries = newEntries.filter(
-            (func) => func.id != deletedFuncId.value
-          );
-        }
+        // if (deletedFuncId.value != "") {
+        //   newEntries = newEntries.filter(
+        //     (func) => func.id != deletedFuncId.value
+        //   );
+        // }
         // eslint-disable-next-line vue/no-side-effects-in-computed-properties
         totalPages.value = arr.pages(newEntries, limitPerPage.value);
         newEntries = arr.paginate(
