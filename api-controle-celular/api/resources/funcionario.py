@@ -151,12 +151,12 @@ class FuncionarioListResource(Resource):
         required=True,
         help="Um funcionário deve pertencer a um centro de custo"
     )
-    data_parser.add_argument("linhas",
-        type=list
-    )
-    data_parser.add_argument("aparelhos",
-        type=list
-    )
+    # data_parser.add_argument("linhas",
+    #     type=list
+    # )
+    # data_parser.add_argument("aparelhos",
+    #     type=list
+    # )
 
     def post(self):
         try:
@@ -166,8 +166,8 @@ class FuncionarioListResource(Resource):
             if funcionario:
                 return {"message": f"Funcionario com o CPF {cpf} já existente"}
             
-            data["linhas"] = []
-            data["aparelhos"] = []
+            # data["linhas"] = []
+            # data["aparelhos"] = []
 
             funcionario = FuncionarioModel(**data)
             funcionario.upsert()
