@@ -45,8 +45,9 @@ class DocumentComposer:
         run_3 = 'funcionário, brasileiro, portador do RG nº '
         run_4 = f'{funcionario.rg} '
         run_5 = 'inscrito no CPF/MF sob nº '
-        run_6 = '{}.{}.{}-{}, '.format(funcionario.cpf[:3], funcionario.cpf[3:6], funcionario.cpf[6:9], funcionario.cpf[9:])
-        run_7 = 'doravante denominado (a) '
+        # run_6 = '{}.{}.{}-{}, '.format(funcionario.cpf[:3], funcionario.cpf[3:6], funcionario.cpf[6:9], funcionario.cpf[9:])
+        run_6 = funcionario.cpf
+        run_7 = ' doravante denominado (a) '
         run_8 = '"CONTRATADO(A)" '
         run_9 = 'e, do outro lado, SOFTWARE AG BRASIL INFORMÁTICA E SERVIÇOS LTDA., ' \
                  'sociedade brasileira, estabelecida na Cidade de São Paulo, ' \
