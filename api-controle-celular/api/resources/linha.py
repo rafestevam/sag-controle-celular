@@ -1,5 +1,6 @@
 from typing_extensions import Required
 from flask_restful import Resource, reqparse
+from flask_jwt_extended import jwt_required
 from flask_cors import cross_origin
 from models.linha import LinhaModel
 
@@ -24,7 +25,7 @@ class LinhaResource(Resource):
         type=str
     )
 
-    @cross_origin()
+    @jwt_required()
     def get(self, id):
         try:
             linha = LinhaModel.find_by_id(id)
@@ -34,7 +35,7 @@ class LinhaResource(Resource):
         except RuntimeError as e:
             return {"message": f"Erro interno {str(e)}"}, 500
 
-    @cross_origin()
+    @jwt_required()
     def put(self, id):
         try:
             data = LinhaResource.data_parser.parse_args()
@@ -65,7 +66,7 @@ class LinhaResource(Resource):
         except RuntimeError as e:
             return {"message": f"Erro interno {str(e)}"}, 500
     
-    @cross_origin()
+    @jwt_required()
     def delete(self, id):
         try:
             linha = LinhaModel.find_by_id(id)
@@ -117,7 +118,7 @@ class LinhaListResource(Resource):
         default='',
     )
 
-    # @cross_origin()
+    @jwt_required()
     def post(self):
         try:
             data = LinhaListResource.data_parser.parse_args()
@@ -149,6 +150,7 @@ class LinhaListResource(Resource):
         except RuntimeError as e:
             return {"message": f"Erro interno {str(e)}"}, 500
 
+    @jwt_required()
     def get(self):
         try:
             linhas = LinhaModel.get_all()

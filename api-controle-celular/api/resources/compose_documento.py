@@ -1,9 +1,11 @@
 from flask_restful import Resource
+from flask_jwt_extended import jwt_required
 from models.funcionario import FuncionarioModel
 from composer.documento import DocumentComposer
 
 class DocumentResource(Resource):
 
+    @jwt_required()
     def get(self, id):
         try:
             funcionario =  FuncionarioModel.find_by_id(id)

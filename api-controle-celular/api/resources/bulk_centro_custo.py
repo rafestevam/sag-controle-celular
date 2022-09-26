@@ -1,5 +1,6 @@
 from flask import request
 from flask_restful import Resource, reqparse
+from flask_jwt_extended import jwt_required
 from parsers.centro_custo import CentroCustoParser
 import os
 import app_config
@@ -7,6 +8,7 @@ import werkzeug
 
 class BulkCentroCusto(Resource):
 
+    @jwt_required()
     def post(self):
         try:
             uploaded_file = request.files['file']

@@ -1,5 +1,6 @@
 from flask import request
 from flask_restful import Resource, reqparse
+from flask_jwt_extended import jwt_required
 from parsers.aparelho import AparelhoParser
 import os
 import app_config
@@ -7,6 +8,7 @@ import werkzeug
 
 class BulkAparelho(Resource):
 
+    @jwt_required()
     def post(self):
         try:
             uploaded_file = request.files['file']

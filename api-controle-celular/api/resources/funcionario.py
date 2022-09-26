@@ -1,4 +1,5 @@
 from flask_restful import Resource, reqparse
+from flask_jwt_extended import jwt_required
 from models.funcionario import FuncionarioModel
 
 class FuncionarioResource(Resource):
@@ -57,6 +58,7 @@ class FuncionarioResource(Resource):
     #     action='append'
     # )
     
+    @jwt_required()
     def get(self, id):
         try:
             funcionario = FuncionarioModel.find_by_id(id)
@@ -66,6 +68,7 @@ class FuncionarioResource(Resource):
         except RuntimeError as e:
             return {"message": f"Erro interno {str(e)}"}, 500
 
+    @jwt_required()
     def put(self, id):
         try:
             data = FuncionarioResource.data_parser.parse_args()
@@ -89,6 +92,7 @@ class FuncionarioResource(Resource):
         except RuntimeError as e:
             return {"message": f"Erro interno {str(e)}"}, 500
 
+    @jwt_required()
     def delete(self, id):
         try:
             funcionario = FuncionarioModel.find_by_id(id)
@@ -158,6 +162,7 @@ class FuncionarioListResource(Resource):
     #     type=list
     # )
 
+    @jwt_required()
     def post(self):
         try:
             data = FuncionarioListResource.data_parser.parse_args()
@@ -175,6 +180,7 @@ class FuncionarioListResource(Resource):
         except RuntimeError as e:
             return {"message": f"Erro interno {str(e)}"}, 500
 
+    @jwt_required()
     def get(self):
         try:
             funcionarios = FuncionarioModel.get_all()

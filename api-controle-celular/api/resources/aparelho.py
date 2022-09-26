@@ -1,5 +1,6 @@
 from flask_restful import Resource, reqparse
 from flask_cors import cross_origin
+from flask_jwt_extended import jwt_required
 from models.aparelho import AparelhoModel
 from models.linha import LinhaModel
 
@@ -49,7 +50,7 @@ class AparelhoResource(Resource):
     #     help="Uma linha deve ser atribuída a um aparelho"
     # )
 
-    @cross_origin()
+    @jwt_required()
     def get(self, id):
         try:
             aparelho = AparelhoModel.find_by_id(id)
@@ -59,7 +60,7 @@ class AparelhoResource(Resource):
         except RuntimeError as e:
             return {"message": f"Erro interno {str(e)}"}, 500
 
-    @cross_origin()
+    @jwt_required()
     def put(self, id):
         try:
             data = AparelhoResource.data_parser.parse_args()
@@ -91,7 +92,7 @@ class AparelhoResource(Resource):
         except RuntimeError as e:
             return {"message": f"Erro interno {str(e)}"}, 500
 
-    @cross_origin()
+    @jwt_required()
     def delete(self, id):
         try:
             aparelho = AparelhoModel.find_by_id(id)
@@ -161,6 +162,7 @@ class AparelhoListResource(Resource):
     # )
 
     # @cross_origin()
+    @jwt_required()
     def post(self):
         try:
             data = AparelhoListResource.data_parser.parse_args()
@@ -182,6 +184,7 @@ class AparelhoListResource(Resource):
             return {"message": f"Erro interno {str(e)}"}, 500
 
     # @cross_origin()
+    @jwt_required()
     def get(self):
         try:
             aparelhos = AparelhoModel.get_all()

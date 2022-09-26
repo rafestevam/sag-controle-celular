@@ -1,5 +1,6 @@
 from cellphoneauth import auth_required
 from flask_restful import Resource, reqparse
+from flask_jwt_extended import jwt_required
 from models.centro_custo import CentroCustoModel
 from flask.json import jsonify
 
@@ -11,6 +12,7 @@ class CentroCustoResource(Resource):
         help="Este campo não deve estar vazio"
     )
 
+    @jwt_required()
     def get(self, id):
         try:
             centro_custo = CentroCustoModel.find_by_id(id)
@@ -20,6 +22,7 @@ class CentroCustoResource(Resource):
         except RuntimeError as e:
             return {"message": f"Erro interno {str(e)}"}, 500
     
+    @jwt_required()
     def put(self, id):
         try:
             centro_custo = CentroCustoModel.find_by_id(id)
@@ -33,6 +36,7 @@ class CentroCustoResource(Resource):
         except RuntimeError as e:
             return {"message": f"Erro interno {str(e)}"}, 500
 
+    @jwt_required()
     def delete(self, id):
         try:
             centro_custo = CentroCustoModel.find_by_id(id)
@@ -42,7 +46,6 @@ class CentroCustoResource(Resource):
             return {"message": "Centro de Custo excluído com sucesso"}, 200
         except RuntimeError as e:
             return {"message": f"Erro interno {str(e)}"}, 500
-
 
 class CentroCustoResourceList(Resource):
     data_parser = reqparse.RequestParser()
@@ -57,6 +60,7 @@ class CentroCustoResourceList(Resource):
         help="Este campo não deve estar vazio"
     )
 
+    @jwt_required()
     def get(self):
         try:
             centros_custo = CentroCustoModel.get_all()
@@ -66,7 +70,8 @@ class CentroCustoResourceList(Resource):
             return {"message": "Não há centros de custo cadastrados na base"}, 400
         except RuntimeError as error:
             return {"message": f"Erro interno: {str(error)}"}, 500
-        
+    
+    @jwt_required()
     def post(self):
         try:
             data = CentroCustoResourceList.data_parser.parse_args()
@@ -84,6 +89,8 @@ class CentroCustoResourceList(Resource):
         #     return {"message": f"Erro interno {str(e)}"}, 500
         
 class CentroCustoResourceListPaginated(Resource):
+    
+    @jwt_required()
     def get(self, page_num):
         try:
             # centros_custo = CentroCustoModel.get_all()
@@ -95,6 +102,8 @@ class CentroCustoResourceListPaginated(Resource):
             return {"message": f"Erro interno: {str(error)}"}, 500
 
 class CentroCustoResourcePages(Resource):
+
+    @jwt_required()
     def get(self):
         try:
             ccPages = CentroCustoModel.get_number_of_pages()
