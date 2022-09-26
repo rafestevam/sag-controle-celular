@@ -56,6 +56,16 @@ def create_tables():
 # Determinação do JWT
 jwt = JWTManager(app)
 
+# Adicionando infos adicionais ao Token JWT
+@jwt.additional_claims_loader
+def add_claims_to_jwt(identity):
+    user = UserModel.find_by_id(identity)
+    if user:
+        return {
+            "name": user.name,
+            "username": user.username
+        }
+
 # Tratamento de erros do Token JWT
 @jwt.expired_token_loader
 def expired_token_callback(jwt_header, jwt_payload):
