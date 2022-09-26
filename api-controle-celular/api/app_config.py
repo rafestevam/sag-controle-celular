@@ -3,6 +3,9 @@ SQLALCHEMY_DATABASE_URI = "sqlite:///cellphone.db"
 SQLALCHEMY_TRACK_MODIFICATIONS = False
 PROPAGATE_EXCEPTIONS = True
 
+# Definição de secret key para JWT
+JWT_SECRET_KEY = 'cHCoGzyTy1OPj8klE640'
+
 # Autenticação do APP no Azure AD B2C
 CLIENT_ID = "42f4eb4b-f48d-4bdf-af99-c3994605a805"
 # CLIENT_SECRET = "aded315b-e3a5-4cb0-9370-4b4a78d77a7c"

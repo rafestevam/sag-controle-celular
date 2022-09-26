@@ -1,7 +1,8 @@
-from flask import Flask
+from flask import Flask, jsonify
 from flask_cors import CORS
 from flask_restful import Api
 from flask_session import Session
+from flask_jwt_extended import JWTManager
 from db import db
 
 # Importação das configs da aplicação
@@ -12,6 +13,7 @@ from models.centro_custo import CentroCustoModel
 from models.funcionario import FuncionarioModel
 from models.linha import LinhaModel
 from models.aparelho import AparelhoModel
+from models.user import UserModel
 
 # Importação dos Resources
 from resources.hello import HelloResource
@@ -19,6 +21,7 @@ from resources.centro_custo import CentroCustoResource, CentroCustoResourceList,
 from resources.funcionario import FuncionarioResource, FuncionarioListResource
 from resources.linha import LinhaResource, LinhaListResource
 from resources.aparelho import AparelhoResource, AparelhoListResource
+from resources.user import UserLogin, UserRegister
 
 # Importação dos Resources para Bulk Loading
 from resources.bulk_centro_custo import BulkCentroCusto
@@ -36,6 +39,10 @@ CORS(app)
 app.config.from_object(app_config)
 Session(app)
 
+# Secret Key da App para JWT
+app.secret_key = 'hrRgZRuVK98E9rBs'
+#app.secret_key = secrets.SystemRandom().getrandbits(128)
+
 # Inicializando a API Restful
 api = Api(app)
 
@@ -45,6 +52,28 @@ db.init_app(app)
 @app.before_first_request
 def create_tables():
     db.create_all()
+
+# Determinação do JWT
+jwt = JWTManager(app)
+
+# Tratamento de erros do Token JWT
+@jwt.expired_token_loader
+def expired_token_callback(jwt_header, jwt_payload):
+    return (
+        jsonify({"message": "O token foi expirado.", "error": "token_expired"}), 401
+    )
+
+@jwt.invalid_token_loader
+def invalid_token_callback(error):
+    return(
+        jsonify({"message": "Token inválido.", "error": "invalid_token"}), 401
+    )
+
+@jwt.unauthorized_loader
+def missing_token_callback(error):
+    return (
+        jsonify({"message": "A requisição não contém um token de acesso.", "error": "authorization_required"}), 401
+    )
 
 # Roteamento dos recursos da API
 api.add_resource(HelloResource, '/hello')
@@ -63,6 +92,8 @@ api.add_resource(BulkAparelho, '/bulk/aparelhos')
 api.add_resource(BulkLinha, '/bulk/linhas')
 api.add_resource(BulkFuncionario, '/bulk/funcionarios')
 api.add_resource(DocumentResource, '/compose/<string:id>')
+api.add_resource(UserRegister, '/register')
+api.add_resource(UserLogin, '/login')
 
 # Inicialização da app Python
 if __name__ == '__main__':
