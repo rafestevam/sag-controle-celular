@@ -4,6 +4,7 @@ from flask_restful import Api
 from flask_session import Session
 from flask_jwt_extended import JWTManager
 from db import db
+from blocklist import BLOCKLIST
 
 # Importação das configs da aplicação
 import app_config
@@ -66,6 +67,11 @@ def add_claims_to_jwt(identity):
             "username": user.username
         }
 
+# Verificando se um token já foi utilizado
+@jwt.token_in_blocklist_loader
+def check_if_token_in_blocklist(jwt_header, jwt_payload):
+    return jwt_payload["jti"] in BLOCKLIST
+
 # Tratamento de erros do Token JWT
 @jwt.expired_token_loader
 def expired_token_callback(jwt_header, jwt_payload):
@@ -83,6 +89,12 @@ def invalid_token_callback(error):
 def missing_token_callback(error):
     return (
         jsonify({"message": "A requisição não contém um token de acesso.", "error": "authorization_required"}), 401
+    )
+
+@jwt.revoked_token_loader
+def revoked_token_callback(jwt_header, jwt_payload):
+    return(
+        jsonify({"message": "O token já foi utilizado.", "error": "token_revoked"}), 401
     )
 
 # Roteamento dos recursos da API
