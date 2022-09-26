@@ -1,8 +1,9 @@
 from flask_restful import Resource, reqparse
-from flask_jwt_extended import create_access_token
+from flask_jwt_extended import create_access_token, jwt_required, get_jwt
 from werkzeug.security import safe_str_cmp
 from passlib.hash import pbkdf2_sha256
 from models.user import UserModel
+from blocklist import BLOCKLIST
 
 class UserLogin(Resource):
     parser = reqparse.RequestParser()
@@ -66,6 +67,13 @@ class UserRegister(Resource):
         )
         user.upsert()
         return {"message": f"Usuário {username} criado com sucesso!"}, 201
+
+class UserLogout(Resource):
+    @jwt_required()
+    def post(self):
+        jti = get_jwt()["jti"]
+        BLOCKLIST.add(jti)
+        return {"message": "Usuário deslogado com sucesso."}, 200
 
 
 
