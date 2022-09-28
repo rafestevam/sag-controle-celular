@@ -22,7 +22,7 @@ from resources.centro_custo import CentroCustoResource, CentroCustoResourceList,
 from resources.funcionario import FuncionarioResource, FuncionarioListResource
 from resources.linha import LinhaResource, LinhaListResource
 from resources.aparelho import AparelhoResource, AparelhoListResource
-from resources.user import UserLogin, UserRegister
+from resources.user import UserLogin, UserRegister, UserLogout
 
 # Importação dos Resources para Bulk Loading
 from resources.bulk_centro_custo import BulkCentroCusto
@@ -116,6 +116,7 @@ api.add_resource(BulkFuncionario, '/bulk/funcionarios')
 api.add_resource(DocumentResource, '/compose/<string:id>')
 api.add_resource(UserRegister, '/register')
 api.add_resource(UserLogin, '/login')
+api.add_resource(UserLogout, '/logout')
 
 # Inicialização da app Python
 if __name__ == '__main__':
