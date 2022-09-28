@@ -1,7 +1,7 @@
 <template>
   <main class="is-gapless is-multiline">
-    <header>
-      <MainNavigation />
+    <header v-if="showNavBar">
+      <MainNavigation @aoUserLogout="userLogout()"/>
     </header>
     <Notification @onCloseNotification="closeNotification" />
     <router-view></router-view>
@@ -9,11 +9,13 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, onBeforeMount } from "vue";
+import { computed, defineComponent, onBeforeMount } from "vue";
 import MainNavigation from "./components/MainNavigation.vue";
 import Notification from "./components/Notifications/Notification.vue";
 import { useStore } from "@/store";
 import { DELETE_NOTIFICATION } from "./store/modules/notif/constants/mutation-type";
+import { USER_LOGOUT } from "./store/modules/usuario/constants/action-type";
+import IUsuarioLogado from "./interfaces/IUsuario";
 
 export default defineComponent({
   name: "App",
@@ -33,12 +35,25 @@ export default defineComponent({
     });
     return {
       store,
+      loggedUser: computed(() => store.state.usuario.user),
+      showNavBar: computed(() => {
+        const user = store.state.usuario.user || {} as IUsuarioLogado;
+        if(user.loggedIn){
+          return true;
+        }
+        return false;
+      })
     };
   },
   methods: {
     closeNotification(idNotif: string) {
       this.store.commit(DELETE_NOTIFICATION, idNotif);
     },
+    userLogout(){
+      this.store
+        .dispatch(USER_LOGOUT)
+        .then(() => this.$router.push("/"));
+    }
   },
 });
 </script>

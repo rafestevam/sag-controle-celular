@@ -15,10 +15,16 @@ import ListaFuncionarios from "@/views/Funcionarios/ListaFuncionarios.vue";
 import Utilitarios from "@/views/Utilitarios.vue";
 import BulkLoading from "@/views/Utilitarios/BulkLoading.vue";
 import TermoComposer from "@/views/Utilitarios/TermoComposer.vue";
+import Login from "@/views/Login.vue";
 
 const routes:  RouteRecordRaw[] = [
     {
         path: '/',
+        name: 'Login',
+        component: Login,
+    },
+    {
+        path: '/home',
         name: 'Home',
         component: Home,
         // meta: {
@@ -134,6 +140,16 @@ const routes:  RouteRecordRaw[] = [
 const router = createRouter({
     history: createWebHistory(),
     routes
+});
+
+router.beforeEach((to, from, next) => {
+    if (to.name !== 'Login'){
+        const token = localStorage.getItem('jwt');
+        if (!token) {
+            next('/')
+        }
+    }
+    next();
 });
 
 // registerGuard(router);

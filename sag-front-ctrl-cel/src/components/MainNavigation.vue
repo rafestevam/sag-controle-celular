@@ -1,7 +1,7 @@
 <template>
   <nav class="navbar is-black" role="navigation" aria-label="main navigation">
     <div class="navbar-brand">
-      <router-link class="navbar-item" to="/">
+      <router-link class="navbar-item" to="/home">
         <img
           src="@/assets/sag-light-logo.png"
           width="112"
@@ -25,7 +25,7 @@
     <div id="navbarBasicExample" class="navbar-menu">
       <div class="navbar-start">
         <!-- Home -->
-        <MainNavItem icon="fa-solid fa-house-user" label="Home" :isDropDown="false" route="/"/>
+        <MainNavItem icon="fa-solid fa-house-user" label="Home" :isDropDown="false" route="/home"/>
 
         <!-- Documentação -->
         <!-- <MainNavItem icon="fa-solid fa-landmark" label="Documentação" :isDropDown="false" route="/"/> -->
@@ -91,16 +91,16 @@
 
       </div>
 
-      <!-- <div class="navbar-end">
+      <div class="navbar-end">
         <div class="navbar-item">
           <div class="buttons">
-            <a class="button is-primary">
+            <!-- <a class="button is-primary">
               <strong>Sign up</strong>
-            </a>
-            <a class="button is-light"> Log in </a>
+            </a> -->
+            <a class="button is-primary" @click="logoutUser()"> Log Out </a>
           </div>
         </div>
-      </div> -->
+      </div>
     </div>
   </nav>
 </template>
@@ -111,8 +111,14 @@ import MainNavItem from "./MainNavigation/MainNavItem.vue";
 
 export default defineComponent({
   name: "MainNavigationComponent",
+  emits: ["aoUserLogout"],
   components: {
       MainNavItem,
+  },
+  methods: {
+    logoutUser() {
+      this.$emit("aoUserLogout");
+    }
   }
 });
 </script>

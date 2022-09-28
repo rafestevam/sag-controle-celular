@@ -1,4 +1,5 @@
 import INotification, { IModalNotification } from "@/interfaces/INotification";
+import IUsuarioLogado from "@/interfaces/IUsuario";
 import { InjectionKey } from "vue";
 import { createStore, Store, useStore as vuexUseStore } from "vuex";
 import { aparelho, AparelhoState } from "./modules/aparelho";
@@ -6,12 +7,14 @@ import { centrocusto, CentroCustoState } from "./modules/centrocusto";
 import { funcionario, FuncionarioState } from "./modules/funcionario";
 import { linha, LinhaState } from "./modules/linha";
 import { DELETE_NOTIFICATION, NOTIFY } from "./modules/notif/constants/mutation-type";
+import UserState, { usuario } from "./modules/usuario";
 
 export interface AppState {
     centrocusto: CentroCustoState,
     aparelho: AparelhoState,
     linha: LinhaState,
     funcionario: FuncionarioState,
+    usuario: UserState,
     // notif: NotificationState,
     notifications: INotification[],
     modalNotifications: IModalNotification[],
@@ -31,7 +34,10 @@ export const store = createStore<AppState>({
             linhas: [],
         },
         funcionario: {
-            funcionarios: []
+            funcionarios: [],
+        },
+        usuario: {
+            user: {} as IUsuarioLogado,
         },
         notifications: [],
         modalNotifications: [],
@@ -60,6 +66,7 @@ export const store = createStore<AppState>({
         aparelho,
         linha,
         funcionario,
+        usuario,
     },
 });
 

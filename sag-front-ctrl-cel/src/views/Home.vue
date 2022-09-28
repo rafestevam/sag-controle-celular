@@ -1,6 +1,6 @@
 <template>
   <div class="main-window">
-    <h1 class="title">Bem Vindo, Rafael Oliveira!</h1>
+    <h1 class="title">Bem Vindo, {{ loggedUser.name }}!</h1>
 
     <div class="tile is-ancestor">
       <div class="tile is-vertical">
@@ -37,14 +37,21 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from "vue";
+import { computed, defineComponent } from "vue";
 import DashboardTile from "@/components/DashboardTile/DashboardTile.vue";
 import DoughnutChart from "@/components/Charts/DoughnutChart/DoughnutChart.vue";
+import { useStore } from "@/store";
 export default defineComponent({
   name: "HomeViewComponent",
   components: {
     DashboardTile,
     DoughnutChart,
   },
+  setup() {
+    const store = useStore();
+    return {
+      loggedUser: computed(() => store.state.usuario.user),
+    }
+  }
 });
 </script>
