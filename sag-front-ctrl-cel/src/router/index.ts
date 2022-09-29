@@ -16,6 +16,7 @@ import Utilitarios from "@/views/Utilitarios.vue";
 import BulkLoading from "@/views/Utilitarios/BulkLoading.vue";
 import TermoComposer from "@/views/Utilitarios/TermoComposer.vue";
 import Login from "@/views/Login.vue";
+import { nextTick } from "vue";
 
 const routes:  RouteRecordRaw[] = [
     {
@@ -150,6 +151,10 @@ router.beforeEach((to, from, next) => {
         }
     }
     next();
+});
+
+router.afterEach(() => {
+    nextTick(() => document.title = 'GIS - Controle de Celulares')
 });
 
 // registerGuard(router);
