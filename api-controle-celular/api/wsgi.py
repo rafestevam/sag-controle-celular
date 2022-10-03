@@ -9,7 +9,7 @@
 import sys
 import site
 
-site.addsitedir('/var/www/sag-controle-celular/api-controle-celular/controlcel/lib/python3.6/site-packages')
-sys.path.insert('/var/www/sag-controle-celular/api-controle-celular/controlcel')
+site.addsitedir('/var/www/sag-controle-celular/controlcel/lib/python3.6/site-packages')
+sys.path.insert(0, '/var/www/sag-controle-celular/api-controle-celular/api')
 
 from app import app as application
