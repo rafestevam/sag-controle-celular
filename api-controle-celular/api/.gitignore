@@ -2,7 +2,8 @@ __pycache__/
 **/__pycache__
 .vscode/
 flask_session/
-static/**
+static/documents/*
+static/files/*
 
 *.pyc
 *.csv
