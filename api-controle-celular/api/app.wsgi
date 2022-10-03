@@ -1,11 +1,3 @@
-#!/usr/bin/env python
-
-# from app import app
-
-# # Inicialização da app Python
-# if __name__ == '__main__':
-#     app.run()
-
 import sys
 import site
 
