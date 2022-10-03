@@ -3,7 +3,7 @@ import axios, { AxiosInstance } from 'axios';
 // const token = localStorage.getItem('jwt');
 
 const httpClient: AxiosInstance = axios.create({
-    baseURL: 'http://localhost:5000/',
+    baseURL: 'http://vadlatamcontrol01.eur.ad.sag:5000/',
     // headers: {
     //     Authorization: token ? `Bearer ${token}` : '',
     // },
