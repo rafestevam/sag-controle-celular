@@ -100,7 +100,7 @@ class FuncionarioResource(Resource):
                 return {"message": "Funcionario não encontrado"}, 400
             if funcionario.aparelhos.count() > 0:
                 return {"message": "Funcionário tem aparelhos atribuídos"}, 400
-            if funcionário.linhas.count() > 0:
+            if funcionario.linhas.count() > 0:
                 return {"message": "Funcionário tem linhas atribuídas"}, 400
             funcionario.delete()
             return {"message": "Funcionário excluído com sucesso"}, 200
