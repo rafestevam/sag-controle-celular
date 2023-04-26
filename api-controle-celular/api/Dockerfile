@@ -1,10 +1,9 @@
-FROM python:3.6
-
-USER 0
+FROM registry.access.redhat.com/ubi9/ubi
 
 COPY ./requirements.txt /tmp/requirements.txt
 
-RUN adduser \
+RUN dnf install python3 && dnf install python3-requests &&  dnf install python3-pip && \
+    adduser \
     --no-create-home \
     --system \
     --shell /usr/sbin/nologin \
