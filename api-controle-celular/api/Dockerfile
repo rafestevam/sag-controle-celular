@@ -1,5 +1,15 @@
-FROM python:3.6
-USER 0
+FROM registry.access.redhat.com/ubi9/ubi
+
+RUN adduser \
+    --no-create-home \
+    --system \
+    --shell /usr/sbin/nologin
+    python-server && \
+    mkdir -p /api && \
+    chown -R python-server:python-server /api
+
+USER python-server
+
 WORKDIR /api
 COPY ./requirements.txt requirements.txt
 RUN pip install --no-cache-dir --upgrade -r requirements.txt
