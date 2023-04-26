@@ -3,7 +3,7 @@ FROM registry.access.redhat.com/ubi8/ubi
 COPY ./requirements.txt /tmp/requirements.txt
 
 RUN mkdir -p /api
-COPY . .
+COPY . /api
 
 RUN dnf install -y git && \
     dnf install -y python36 && \
