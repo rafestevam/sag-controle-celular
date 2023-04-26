@@ -4,8 +4,8 @@ COPY ./requirements.txt /tmp/requirements.txt
 
 RUN dnf install -y git && \
     dnf install -y python36 && \
-    dnf install -y python36-requests && \
-    dnf install -y python36-pip && \
+    dnf install -y python3-requests && \
+    dnf install -y python3-pip && \
     adduser \
     --no-create-home \
     --system \
