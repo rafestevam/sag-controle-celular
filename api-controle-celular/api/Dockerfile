@@ -6,8 +6,6 @@ RUN mkdir -p /deployment && \
     adduser  --no-create-home --system --shell /usr/sbin/nologin python-server && \
     chown -R python-server /deployment
 
-USER python-server
-
 WORKDIR /deployment
 
 COPY ./composer/* /deployment/composer/
@@ -24,6 +22,8 @@ COPY requirements.txt /deployment
 
 RUN pip3 install --upgrade pip && \
     pip3 install -r requirements.txt --no-cache-dir
+
+USER python-server
 
 EXPOSE 5000
 
