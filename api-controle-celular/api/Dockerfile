@@ -3,7 +3,7 @@ FROM registry.access.redhat.com/ubi9/ubi
 RUN adduser \
     --no-create-home \
     --system \
-    --shell /usr/sbin/nologin
+    --shell /usr/sbin/nologin \
     python-server && \
     mkdir -p /api && \
     chown -R python-server:python-server /api
