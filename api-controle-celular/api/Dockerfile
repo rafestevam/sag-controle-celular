@@ -7,7 +7,6 @@ COPY . /api
 
 RUN dnf install -y git && \
     dnf install -y python36 && \
-    python3 -m pip install --upgrade pip && \
     adduser \
     --no-create-home \
     --system \
@@ -15,6 +14,7 @@ RUN dnf install -y git && \
     python-server && \
     python3 -m venv /venv && \
     source /venv/bin/activate && \
+    python3 -m pip install --upgrade pip && \
     pip3 install --no-cache-dir --upgrade -r /tmp/requirements.txt --no-cache-dir && \
     chown -R python-server /api && \
     chown -R python-server /venv
