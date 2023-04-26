@@ -1,5 +1,13 @@
 FROM registry.access.redhat.com/ubi8/python-36
 
+USER 0
+
+RUN mkdir -p /deployment && \
+    adduser  --no-create-home --system --shell /usr/sbin/nologin python-server && \
+    chown -R python-server /deployment
+
+USER python-server
+
 WORKDIR /deployment
 
 COPY ./composer/* /deployment/composer/
@@ -15,11 +23,7 @@ COPY db.py /deployment
 COPY requirements.txt /deployment
 
 RUN pip3 install --upgrade pip && \
-    pip3 install -r requirements.txt --no-cache-dir && \
-    adduser  --no-create-home --system --shell /usr/sbin/nologin python-server && \
-    chown -R python-server .
-
-USER python-server
+    pip3 install -r requirements.txt --no-cache-dir
 
 EXPOSE 5000
 
