@@ -6,7 +6,7 @@ RUN adduser \
     --shell /usr/sbin/nologin \
     python-server && \
     mkdir -p /api && \
-    chown -R python-server:python-server /api
+    chown -R python-server /api
 
 USER python-server
 
