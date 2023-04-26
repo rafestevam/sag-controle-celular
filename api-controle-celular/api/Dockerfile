@@ -9,7 +9,7 @@ RUN dnf install -y git && \
     --system \
     --shell /usr/sbin/nologin \
     python-server && \
-    pip install --no-cache-dir --upgrade -r /tmp/requirements.txt && \
+    pip3 install --no-cache-dir --upgrade -r /tmp/requirements.txt && \
     mkdir -p /api && \
     chown -R python-server /api
 
