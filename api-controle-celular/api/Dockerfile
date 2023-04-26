@@ -1,4 +1,5 @@
 FROM python:3.6
+USER 0
 WORKDIR /api
 COPY ./requirements.txt requirements.txt
 RUN pip install --no-cache-dir --upgrade -r requirements.txt
