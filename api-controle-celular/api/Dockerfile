@@ -1,4 +1,4 @@
-FROM registry.access.redhat.com/ubi9/ubi
+FROM registry.access.redhat.com/ubi8/ubi
 
 COPY ./requirements.txt /tmp/requirements.txt
 
