@@ -13,7 +13,7 @@ RUN dnf install -y git && \
     --system \
     --shell /usr/sbin/nologin \
     python-server && \
-    pip3 install --no-cache-dir --upgrade -r /tmp/requirements.txt && \
+    pip3 install --no-cache-dir --upgrade -r /tmp/requirements.txt --no-cache-dir && \
     chown -R python-server /api
 
 USER python-server
