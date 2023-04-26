@@ -23,5 +23,7 @@ USER python-server
 
 WORKDIR /api
 
+RUN source /venv/bin/activate
+
 EXPOSE 5000
 CMD ["flask", "run", "--host", "0.0.0.0"].
