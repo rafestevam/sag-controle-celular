@@ -5,7 +5,7 @@ WORKDIR /deployment
 COPY . /deployment
 
 RUN pip3 install --upgrade pip && \
-    pip3 install -r requirements.txt
+    pip3 install -r requirements.txt --no-cache-dir
 
 EXPOSE 5000
 
