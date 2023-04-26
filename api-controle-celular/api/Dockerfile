@@ -15,7 +15,11 @@ COPY db.py /deployment
 COPY requirements.txt /deployment
 
 RUN pip3 install --upgrade pip && \
-    pip3 install -r requirements.txt --no-cache-dir
+    pip3 install -r requirements.txt --no-cache-dir && \
+    adduser  --no-create-home --system --shell /usr/sbin/nologin python-server && \
+    chown -R python-server .
+
+USER python-server
 
 EXPOSE 5000
 
